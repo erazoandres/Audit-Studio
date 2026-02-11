@@ -25,6 +25,7 @@
             --individual: #10b981;
             --extra: #f43f5e;
             --bonus: #f59e0b;
+            --replacement: #f97316;
             --transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1);
         }
 
@@ -233,6 +234,11 @@
             color: var(--extra);
         }
 
+        .tag-r {
+            background: rgba(249, 115, 22, 0.1);
+            color: var(--replacement);
+        }
+
         .card-title {
             font-size: 0.95rem;
             font-weight: 600;
@@ -262,85 +268,131 @@
             font-weight: 700;
         }
 
-        /* Class Detail View (Drawer) */
+        /* Ultra-Compact technical Drawer */
         .drawer {
             position: fixed;
             top: 0;
-            right: -500px;
-            width: 500px;
-            height: 100%;
+            right: 0;
+            bottom: 0;
+            width: 420px;
             background: #000;
-            border-left: 1px solid var(--border);
+            border-left: 1px solid #111;
             z-index: 1000;
-            transition: var(--transition);
+            transform: translateX(100%);
+            transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
-            box-shadow: -20px 0 60px rgba(0, 0, 0, 0.7);
+            box-shadow: -20px 0 60px rgba(0, 0, 0, 1);
         }
 
         .drawer.active {
-            right: 0;
+            transform: translateX(0);
         }
 
         .drawer-header {
-            padding: 2rem;
-            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #111;
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
+            background: #050505;
+        }
+
+        .drawer-header-content h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            color: #fff;
         }
 
         .drawer-close {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: #fff;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+            background: transparent;
+            border: 1px solid #222;
+            color: #555;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .drawer-close:hover {
+            color: #fff;
+            border-color: #444;
         }
 
         .drawer-body {
             flex-grow: 1;
             overflow-y: auto;
-            padding: 2rem;
+            padding: 1rem 0;
         }
 
-        .class-row {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
+        .log-entry {
+            padding: 0.85rem 2rem;
+            display: grid;
+            grid-template-columns: 45px 1fr 85px;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid #0a0a0a;
+            transition: background 0.2s;
+        }
+
+        .log-entry:hover {
+            background: #080808;
+        }
+
+        .log-date {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            align-items: center;
+            line-height: 1;
         }
 
-        .l-date {
-            font-size: 0.75rem;
-            color: var(--text-dim);
-            font-weight: 600;
-        }
-
-        .l-name {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #fff;
-        }
-
-        .l-footer {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8rem;
-        }
-
-        .l-price {
+        .log-day {
+            font-size: 1.1rem;
             font-weight: 800;
             color: var(--accent);
+        }
+
+        .log-m {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            color: #444;
+            margin-top: 2px;
+        }
+
+        .log-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            overflow: hidden;
+        }
+
+        .log-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #ccc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .log-meta {
+            font-size: 0.7rem;
+            color: #444;
+            font-weight: 500;
+        }
+
+        .log-price {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-align: right;
+            color: #fff;
+            font-family: 'Inter', monospace;
         }
 
         /* Overlay */
@@ -476,6 +528,28 @@
             gap: 1.5rem;
         }
 
+        .day-header {
+            grid-column: 1 / -1;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--accent);
+            letter-spacing: 2px;
+            padding: 2rem 0 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid #111;
+            margin-bottom: 0.5rem;
+        }
+
+        .day-header::after {
+            content: '';
+            flex-grow: 1;
+            height: 1px;
+            background: #0a0a0a;
+        }
+
         .card-grid.view-list {
             display: flex;
             flex-direction: column;
@@ -605,6 +679,7 @@
         <div class="nav-link" data-filter="premium">Premium</div>
         <div class="nav-link" data-filter="grupal">Grupales</div>
         <div class="nav-link" data-filter="individual">Individuales</div>
+        <div class="nav-link" data-filter="replacement">Remplazos</div>
         <div class="nav-link" data-filter="extra">Recursos Extra</div>
 
         <div class="nav-link bonus" data-filter="bonus">🎁 Bono Retención</div>
@@ -652,14 +727,15 @@
     <div class="overlay" id="overlay"></div>
     <div class="drawer" id="drawer">
         <div class="drawer-header">
-            <div>
-                <h3 id="drawer-title" style="font-size: 1.25rem; font-weight: 800; margin-bottom: 4px;">Grupo ID</h3>
-                <p id="drawer-subtitle" style="font-size: 0.75rem; color: var(--text-dim);"></p>
+            <div class="drawer-header-content">
+                <h3 id="drawer-title">Logs_Audit_System</h3>
+                <p id="drawer-subtitle"
+                    style="font-size: 0.6rem; color: #444; text-transform: uppercase; letter-spacing: 1px;"></p>
             </div>
             <button class="drawer-close" id="drawer-close">×</button>
         </div>
         <div class="drawer-body" id="drawer-body">
-            <!-- Classes will appear here -->
+            <!-- Simplified Logs -->
         </div>
     </div>
 
@@ -695,20 +771,24 @@
                 const obj = {};
                 headers.forEach((h, i) => obj[h || `id_${i}`] = parts[i] || '');
 
-                const gStr = (obj.Group || '').toUpperCase();
-                const fStr = (obj['Lesson format'] || '').toLowerCase();
+                const fStr = (obj['Lesson format'] || '').toLowerCase(); // Columna 3 (Tipo)
+                const gStr = (obj.Group || '').toUpperCase();           // Columna 4 (ID/Link)
 
-                // Advanced Classification
+                // CLASIFICACIÓN TÉCNICA (Basada en Col 3 como fuente de verdad)
                 if (gStr.includes('BONUS') || gStr.includes('CONGRATS') || fStr.includes('correction')) {
                     obj.category = 'bonus';
-                } else if (gStr.includes('HTTP') || fStr.includes('extra')) {
+                } else if (fStr.includes('replacement')) {
+                    obj.category = 'replacement';
+                } else if (fStr.includes('extra') || gStr.includes('HTTP')) {
                     obj.category = 'extra';
-                } else if (gStr.includes('PRM')) {
-                    obj.category = 'premium';
-                } else if (gStr.includes('_IND') || fStr.includes('premium')) {
+                } else if (gStr.includes('_IND')) {
                     obj.category = 'individual';
-                } else {
+                } else if (fStr.includes('premium') || gStr.includes('PRM')) {
+                    obj.category = 'premium';
+                } else if (fStr.includes('group') || gStr.includes('GROUP')) {
                     obj.category = 'grupal';
+                } else {
+                    obj.category = 'grupal'; // Fallback
                 }
                 return obj;
             });
@@ -725,73 +805,137 @@
             registry.forEach(item => {
                 if (item.category === 'bonus') return;
                 const name = item.Group || 'Sin Título';
-                if (!groups.has(name)) groups.set(name, { name, items: [], type: item.category });
+
+                if (!groups.has(name)) {
+                    groups.set(name, { name, items: [], type: item.category });
+                }
                 groups.get(name).items.push(item);
+
+                // Promoción de categoría: Si un ID de grupo aparece como 'replacement' una vez 
+                // pero tiene sesiones de 'grupo/premium', el grupo se considera fijo.
+                const currentType = groups.get(name).type;
+                const isRegular = ['grupal', 'premium', 'individual'].includes(item.category);
+                if (isRegular && (currentType === 'replacement' || currentType === 'extra')) {
+                    groups.get(name).type = item.category;
+                }
             });
 
-            const filteredGroups = Array.from(groups.values()).filter(g => {
-                const matchesFilter = currentFilter === 'all' || g.type === currentFilter;
-                const matchesSearch = g.name.toLowerCase().includes(query.toLowerCase());
-                return matchesFilter && matchesSearch;
-            }).sort((a, b) => a.name.localeCompare(b.name));
+            // CALCULO DE ESTADÍSTICAS CONTEXTUALES
+            const parseRate = (val) => parseInt(val.toString().replace(/[^0-9]/g, '')) || 0;
 
-            // Stats Update
-            const totalMoney = filteredGroups.reduce((acc, g) => acc + g.items.reduce((a, b) => a + (parseInt(b.rate) || 0), 0), 0);
-            const totalBonus = registry.filter(d => d.category === 'bonus').reduce((a, b) => a + (parseInt(b.rate) || 0), 0);
-            const totalLessons = filteredGroups.reduce((acc, g) => acc + g.items.length, 0);
+            const filteredForStats = registry.filter(item => {
+                if (currentFilter === 'all') return item.category !== 'bonus';
+                return item.category === currentFilter;
+            });
 
-            document.getElementById('stat-total').innerHTML = `
-                $${(totalMoney + totalBonus).toLocaleString()} 
-                <span style="font-size: 0.75em; color: var(--text-dim); margin-left: 8px; font-weight: 500;">
-                    (<span class="bonus-glow">$${totalBonus.toLocaleString()}</span>
-                    <span class="bonus-tag">bono</span>)
-                </span>
-            `;
-            document.getElementById('stat-groups').textContent = filteredGroups.length;
-            document.getElementById('stat-lessons').textContent = totalLessons;
+            const statMoney = filteredForStats.reduce((a, b) => a + parseRate(b.rate), 0);
+            const statLessons = filteredForStats.length;
 
-            filteredGroups.forEach(g => {
-                const card = document.createElement('div');
-                card.className = 'group-card';
-                card.innerHTML = `
-                    <div class="card-tag tag-${g.type[0]}">${g.type}</div>
-                    <h4 class="card-title">${g.name.startsWith('http') ? 'Recurso Externo / DRIVE' : g.name}</h4>
-                    <div class="card-info">
-                        <div class="qs-item">
-                            <span class="info-label">Sesiones</span>
-                            <span class="info-val">${g.items.length}</span>
-                        </div>
-                        <div class="qs-item" style="text-align: right;">
-                            <span class="info-label">Inversión</span>
-                            <span class="info-val">${(g.items.reduce((a, b) => a + (parseInt(b.rate) || 0), 0)).toLocaleString()}</span>
-                        </div>
-                    </div>
+            const statGroupsCount = Array.from(groups.values()).filter(g => {
+                if (currentFilter === 'all') return g.type !== 'extra' && g.type !== 'replacement';
+                return g.type === currentFilter;
+            }).length;
+
+            if (currentFilter === 'all') {
+                const totalGlobalBonus = registry.filter(d => d.category === 'bonus').reduce((a, b) => a + parseRate(b.rate), 0);
+                document.getElementById('stat-total').innerHTML = `
+                    $${(statMoney + totalGlobalBonus).toLocaleString()} 
+                    <span style="font-size: 0.75em; color: var(--text-dim); margin-left: 8px; font-weight: 500;">
+                        (<span class="bonus-glow">$${totalGlobalBonus.toLocaleString()}</span>
+                        <span class="bonus-tag">bono</span>)
+                    </span>
                 `;
-                card.onclick = () => openDrawer(g);
-                container.appendChild(card);
+            } else {
+                document.getElementById('stat-total').textContent = `$${statMoney.toLocaleString()}`;
+            }
+
+            document.getElementById('stat-groups').textContent = statGroupsCount;
+            document.getElementById('stat-lessons').textContent = statLessons;
+
+            // Filtrado de visualización
+            const displayGroups = Array.from(groups.values()).filter(g => {
+                const matchesSearch = g.name.toLowerCase().includes(query.toLowerCase());
+                if (currentFilter === 'all') {
+                    // En la vista 'Todas', NO mostramos extras ni remplazos como grupos.
+                    return matchesSearch && g.type !== 'extra' && g.type !== 'replacement';
+                }
+                return matchesSearch && g.type === currentFilter;
+            });
+
+            // Agrupación por Día
+            const dayMap = { 'LU': 'Lunes', 'MA': 'Martes', 'MI': 'Miércoles', 'JU': 'Jueves', 'VI': 'Viernes', 'SA': 'Sábado', 'DO': 'Domingo' };
+            const dayOrder = ['LU', 'MA', 'MI', 'JU', 'VI', 'SA', 'DO'];
+            const groupedByDay = {};
+            [...dayOrder, '?'].forEach(d => groupedByDay[d] = []);
+
+            displayGroups.forEach(g => {
+                const code = g.name.slice(-5).toUpperCase();
+                const dayCode = code.substring(0, 2);
+                if (dayMap[dayCode]) {
+                    groupedByDay[dayCode].push(g);
+                } else {
+                    groupedByDay['?'].push(g);
+                }
+            });
+
+            [...dayOrder, '?'].forEach(dCode => {
+                const dayGroups = groupedByDay[dCode];
+                if (dayGroups.length === 0) return;
+
+                const header = document.createElement('div');
+                header.className = 'day-header';
+                header.textContent = dCode === '?' ? 'Recursos Sueltos / Otros' : dayMap[dCode];
+                container.appendChild(header);
+
+                dayGroups.sort((a, b) => a.name.localeCompare(b.name)).forEach(g => {
+                    const card = document.createElement('div');
+                    card.className = 'group-card';
+                    card.innerHTML = `
+                        <div class="card-tag tag-${g.type[0]}">${g.type}</div>
+                        <h4 class="card-title">${g.name.startsWith('http') ? 'Recurso Externo / DRIVE' : g.name}</h4>
+                        <div class="card-info">
+                            <div class="qs-item">
+                                <span class="info-label">Sesiones</span>
+                                <span class="info-val">${g.items.length}</span>
+                            </div>
+                            <div class="qs-item" style="text-align: right;">
+                                <span class="info-label">Inversión</span>
+                                <span class="info-val">${(g.items.reduce((a, b) => a + parseRate(b.rate), 0)).toLocaleString()}</span>
+                            </div>
+                        </div>
+                    `;
+                    card.onclick = () => openDrawer(g);
+                    container.appendChild(card);
+                });
             });
         }
 
         function openDrawer(group) {
-            document.getElementById('drawer-title').textContent = group.name.startsWith('http') ? 'Drive Resource' : group.name;
-            document.getElementById('drawer-subtitle').textContent = `${group.items.length} clases auditadas en categoría ${group.type}`;
+            document.getElementById('drawer-title').textContent = (group.name.startsWith('http') ? 'DRIVE_RESOURCE' : group.name).substring(0, 25);
+            document.getElementById('drawer-subtitle').textContent = `Status: OK | Entries: ${group.items.length}`;
 
             const body = document.getElementById('drawer-body');
             body.innerHTML = '';
 
-            group.items.sort((a, b) => new Date(b['Lesson date']) - new Date(a['Lesson date'])).forEach(l => {
-                const row = document.createElement('div');
-                row.className = 'class-row';
+            group.items.sort((a, b) => new Date(b['Lesson date']) - new Date(a['Lesson date'])).forEach((l) => {
+                const entry = document.createElement('div');
+                entry.className = 'log-entry';
+
                 const d = new Date(l['Lesson date']);
-                row.innerHTML = `
-                    <span class="l-date">${d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
-                    <span class="l-name">${l.Course || 'Corrección de Balance'}</span>
-                    <div class="l-footer">
-                        <span style="color: var(--text-dim)">${l['Lesson format']} • ${l.Length} min</span>
-                        <span class="l-price">${parseInt(l.rate).toLocaleString()} ${l.Currency}</span>
+                const month = d.toLocaleDateString('es-ES', { month: 'short' }).substring(0, 3);
+
+                entry.innerHTML = `
+                    <div class="log-date">
+                        <span class="log-day">${d.getDate()}</span>
+                        <span class="log-m">${month}</span>
                     </div>
+                    <div class="log-info">
+                        <span class="log-name">${l.Course || 'System_Balance_Audit'}</span>
+                        <span class="log-meta">${l['Lesson format']} • ${l.Length}m</span>
+                    </div>
+                    <div class="log-price">${parseInt(l.rate).toLocaleString()}</div>
                 `;
-                body.appendChild(row);
+                body.appendChild(entry);
             });
 
             document.getElementById('drawer').classList.add('active');
