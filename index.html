@@ -426,67 +426,91 @@
         }
 
         .log-entry {
-            padding: 0.85rem 2rem;
+            padding: 0.75rem 1.5rem;
             display: grid;
-            grid-template-columns: 45px 1fr 85px;
+            grid-template-columns: 50px 1fr auto;
             align-items: center;
-            gap: 1rem;
-            border-bottom: 1px solid #0a0a0a;
-            transition: background 0.2s;
+            gap: 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            transition: all 0.2s ease;
+            position: relative;
         }
 
         .log-entry:hover {
-            background: #080808;
+            background: rgba(255, 255, 255, 0.02);
+            padding-left: 1.7rem;
+        }
+
+        .log-entry:hover::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 15%;
+            height: 70%;
+            width: 3px;
+            background: var(--accent);
+            border-radius: 0 4px 4px 0;
+            box-shadow: 0 0 10px var(--accent-soft);
         }
 
         .log-date {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 4px;
+            min-width: 48px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            line-height: 1;
+            justify-content: center;
         }
 
         .log-day {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 800;
-            color: var(--accent);
+            color: #fff;
+            line-height: 1;
         }
 
         .log-m {
-            font-size: 0.6rem;
+            font-size: 0.55rem;
             text-transform: uppercase;
-            color: #444;
+            color: var(--accent);
+            font-weight: 800;
             margin-top: 2px;
+            letter-spacing: 0.5px;
         }
 
         .log-info {
             display: flex;
             flex-direction: column;
-            gap: 2px;
-            overflow: hidden;
+            gap: 1px;
         }
 
         .log-name {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #ccc;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #ececec;
+            letter-spacing: 0.2px;
         }
 
         .log-meta {
-            font-size: 0.7rem;
-            color: #444;
+            font-size: 0.65rem;
+            color: #555;
             font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .log-price {
-            font-size: 0.9rem;
-            font-weight: 700;
-            text-align: right;
-            color: #fff;
             font-family: 'Inter', monospace;
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 4px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         /* Overlay */
@@ -1046,6 +1070,46 @@
         .credits-overlay.active .github-cta {
             animation: float-up 0.6s 0.6s both;
         }
+
+        /* Responsive Improvements */
+        @media (max-width: 480px) {
+            .credits-card {
+                padding: 2.5rem 1.5rem;
+                border-radius: 24px;
+            }
+
+            .credits-logo {
+                width: 60px;
+                height: 60px;
+                font-size: 1.8rem;
+                margin-bottom: 1rem;
+            }
+
+            .credits-title {
+                font-size: 1.7rem;
+            }
+
+            .credits-auth {
+                letter-spacing: 2px;
+                margin-bottom: 1.5rem;
+            }
+
+            .credits-desc {
+                font-size: 0.9rem;
+                margin-bottom: 2rem;
+            }
+
+            .github-cta {
+                padding: 1.25rem 1rem;
+            }
+
+            .github-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 
@@ -1365,18 +1429,19 @@
                 entry.className = 'log-entry';
 
                 const d = new Date(l['Lesson date']);
-                const month = d.toLocaleDateString('es-ES', { month: 'short' }).substring(0, 3);
+                const month = d.toLocaleDateString('es-ES', { month: 'short' }).replace('.', '').toUpperCase();
+                const fullDate = d.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
 
                 entry.innerHTML = `
-                    <div class="log-date">
+                    <div class="log-date" title="${fullDate}">
                         <span class="log-day">${d.getDate()}</span>
                         <span class="log-m">${month}</span>
                     </div>
                     <div class="log-info">
-                        <span class="log-name">${l.Course || 'System_Balance_Audit'}</span>
-                        <span class="log-meta">${l['Lesson format']} • ${l.Length}m</span>
+                        <span class="log-name">${l.Course || 'Session Entry'}</span>
+                        <span class="log-meta">${l['Lesson format']} • ${l.Length}m • ${d.getFullYear()}</span>
                     </div>
-                    <div class="log-price">${parseRate(l.rate).toLocaleString()}</div>
+                    <div class="log-price">$ ${parseRate(l.rate).toLocaleString()}</div>
                 `;
                 body.appendChild(entry);
             });
