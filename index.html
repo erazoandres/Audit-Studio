@@ -879,6 +879,173 @@
         #csv-upload {
             display: none;
         }
+
+        /* Balanced Pro Credits Modal */
+        .credits-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.5s ease;
+        }
+
+        .credits-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .credits-card {
+            background: #0a0a0a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            padding: 3rem 2rem;
+            max-width: 440px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        .credits-overlay.active .credits-card {
+            transform: translateY(0);
+        }
+
+        .credits-logo {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent), #ec4899);
+            border-radius: 20px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            box-shadow: 0 10px 30px rgba(var(--accent-rgb), 0.2);
+        }
+
+        .credits-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 0.25rem;
+            letter-spacing: -1.5px;
+        }
+
+        .credits-auth {
+            display: block;
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        .credits-desc {
+            color: #94a3b8;
+            line-height: 1.7;
+            font-size: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .github-cta {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .github-btn {
+            background: #fff;
+            color: #000;
+            padding: 12px 28px;
+            border-radius: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .github-btn:hover {
+            transform: translateY(-3px);
+            background: var(--accent);
+        }
+
+        .star-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            color: #475569;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .enter-btn {
+            background: transparent;
+            border: none;
+            color: #475569;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            font-weight: 800;
+            transition: all 0.3s;
+        }
+
+        .enter-btn:hover {
+            color: #fff;
+            letter-spacing: 5px;
+        }
+
+        @keyframes float-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .credits-overlay.active .credits-logo {
+            animation: float-up 0.6s 0.2s both;
+        }
+
+        .credits-overlay.active .credits-title {
+            animation: float-up 0.6s 0.3s both;
+        }
+
+        .credits-overlay.active .credits-auth {
+            animation: float-up 0.6s 0.4s both;
+        }
+
+        .credits-overlay.active .credits-desc {
+            animation: float-up 0.6s 0.5s both;
+        }
+
+        .credits-overlay.active .github-cta {
+            animation: float-up 0.6s 0.6s both;
+        }
     </style>
 </head>
 
@@ -970,6 +1137,30 @@
         </div>
         <div class="drawer-body" id="drawer-body">
             <!-- Simplified Logs -->
+        </div>
+    </div>
+
+    <!-- Credits Modal -->
+    <div class="credits-overlay" id="credits-modal">
+        <div class="credits-card">
+            <div class="credits-logo">🚀</div>
+            <h2 class="credits-title">Audit Studio</h2>
+            <span class="credits-auth">By Andrés Erazo</span>
+
+            <p class="credits-desc">
+                Un ecosistema administrativo diseñado para la excelencia en gestión de datos.
+            </p>
+
+            <div class="github-cta">
+                <a href="https://github.com/erazoandres/Audit-Studio" target="_blank" class="github-btn">
+                    <span>🌟</span> Apoyar en GitHub
+                </a>
+                <div class="star-note">
+                    <span style="color: #fbbf24;">★</span> Star en la esquina superior derecha
+                </div>
+            </div>
+
+            <button class="enter-btn" id="close-credits">Entrar al Sistema</button>
         </div>
     </div>
 
@@ -1284,7 +1475,20 @@
             opt.onclick = () => applyTheme(opt.dataset.theme);
         });
 
+        // Credits Modal Trigger
+        function showCredits() {
+            const overlay = document.getElementById('credits-modal');
+            setTimeout(() => {
+                overlay.classList.add('active');
+            }, 800);
+        }
+
+        document.getElementById('close-credits').onclick = () => {
+            document.getElementById('credits-modal').classList.remove('active');
+        };
+
         init();
+        showCredits();
     </script>
 </body>
 
