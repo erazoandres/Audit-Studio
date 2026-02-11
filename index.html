@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Studio | Modern Class Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #050505;
+            --bg-card: #0c0c0c;
+            --bg-nav: #000000;
+            --text-main: #ffffff;
+            --text-dim: #888888;
+            --accent: #5d5dff;
+            --accent-soft: rgba(93, 93, 255, 0.1);
+            --border: #1a1a1a;
+            --premium: #a855f7;
+            --grupal: #0ea5e9;
+            --individual: #10b981;
+            --extra: #f43f5e;
+            --bonus: #f59e0b;
+            --transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Sidebar navigation */
+        aside {
+            width: 280px;
+            background: var(--bg-nav);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 3rem;
+        }
+
+        .brand-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            border-radius: 6px;
+        }
+
+        .brand-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-section-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            letter-spacing: 0.1rem;
+            margin-bottom: 1rem;
+            padding-left: 0.5rem;
+        }
+
+        .nav-link {
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .nav-link:hover {
+            color: white;
+            background: var(--bg-card);
+        }
+
+        .nav-link.active {
+            color: white;
+            background: var(--accent-soft);
+            border: 1px solid rgba(93, 93, 255, 0.2);
+        }
+
+        .nav-link.bonus {
+            margin-top: auto;
+            color: var(--bonus);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .nav-link.bonus.active {
+            background: var(--bonus);
+            color: black;
+            font-weight: 700;
+        }
+
+        /* Main Area */
+        main {
+            flex-grow: 1;
+            padding: 2.5rem 3rem;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title h2 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            color: white;
+            font-size: 0.85rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(93, 93, 255, 0.05);
+        }
+
+        /* Group Card Grid */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .group-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .group-card:hover {
+            border-color: #333;
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-tag {
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            width: fit-content;
+        }
+
+        .tag-p {
+            background: rgba(168, 85, 247, 0.1);
+            color: var(--premium);
+        }
+
+        .tag-g {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--grupal);
+        }
+
+        .tag-i {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--individual);
+        }
+
+        .tag-e {
+            background: rgba(244, 63, 94, 0.1);
+            color: var(--extra);
+        }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: #eee;
+            margin-bottom: auto;
+            word-break: break-all;
+        }
+
+        .card-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .info-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .info-val {
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        /* Class Detail View (Drawer) */
+        .drawer {
+            position: fixed;
+            top: 0;
+            right: -500px;
+            width: 500px;
+            height: 100%;
+            background: #000;
+            border-left: 1px solid var(--border);
+            z-index: 1000;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -20px 0 60px rgba(0, 0, 0, 0.7);
+        }
+
+        .drawer.active {
+            right: 0;
+        }
+
+        .drawer-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .drawer-close {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: #fff;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .drawer-body {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .class-row {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .l-date {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            font-weight: 600;
+        }
+
+        .l-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .l-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+        }
+
+        .l-price {
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 900;
+            display: none;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #222;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #333;
+        }
+
+        /* Stats in Header */
+        .quick-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+        }
+
+        .qs-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .qs-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            letter-spacing: 0.05rem;
+        }
+
+        .qs-val {
+            font-size: 1.1rem;
+            font-weight: 800;
+        }
+
+        /* Bonus Special Screen */
+        .bonus-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80%;
+            text-align: center;
+        }
+
+        .bonus-badge {
+            background: var(--bonus);
+            color: black;
+            font-weight: 800;
+            font-size: 0.7rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .bonus-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .bonus-price {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--bonus);
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(245, 158, 11, 0.2);
+            }
+
+            to {
+                text-shadow: 0 0 15px rgba(245, 158, 11, 0.6), 0 0 20px rgba(245, 158, 11, 0.4);
+            }
+        }
+
+        .bonus-glow {
+            color: var(--bonus);
+            animation: glow 1.5s ease-in-out infinite alternate;
+            font-weight: 800;
+        }
+
+        .bonus-tag {
+            font-size: 0.5rem;
+            text-transform: uppercase;
+            background: var(--bonus);
+            color: black;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 4px;
+            vertical-align: middle;
+            font-weight: 900;
+        }
+    </style>
+</head>
+
+<body>
+    <aside>
+        <div class="brand-group">
+            <div class="brand-icon"></div>
+            <span class="brand-name">AuditStudio</span>
+        </div>
+
+        <p class="nav-section-label">Categorías</p>
+        <div class="nav-link active" data-filter="all">Todas</div>
+        <div class="nav-link" data-filter="premium">Premium</div>
+        <div class="nav-link" data-filter="grupal">Grupales</div>
+        <div class="nav-link" data-filter="individual">Individuales</div>
+        <div class="nav-link" data-filter="extra">Recursos Extra</div>
+
+        <div class="nav-link bonus" data-filter="bonus">🎁 Bono Retención</div>
+    </aside>
+
+    <main id="main-scroll">
+        <div class="main-header">
+            <div class="page-title">
+                <h2 id="current-title">Panel de Control</h2>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="group-search" placeholder="Filtrar por nombre...">
+            </div>
+        </div>
+
+        <div class="quick-stats">
+            <div class="qs-item">
+                <span class="qs-label">Total Auditado</span>
+                <span class="qs-val" id="stat-total">$0</span>
+            </div>
+            <div class="qs-item">
+                <span class="qs-label">Grupos</span>
+                <span class="qs-val" id="stat-groups">0</span>
+            </div>
+            <div class="qs-item">
+                <span class="qs-label">Sesiones</span>
+                <span class="qs-val" id="stat-lessons">0</span>
+            </div>
+        </div>
+
+        <div class="card-grid" id="card-grid">
+            <!-- Dynamic Cards -->
+        </div>
+    </main>
+
+    <!-- Overlay & Drawer -->
+    <div class="overlay" id="overlay"></div>
+    <div class="drawer" id="drawer">
+        <div class="drawer-header">
+            <div>
+                <h3 id="drawer-title" style="font-size: 1.25rem; font-weight: 800; margin-bottom: 4px;">Grupo ID</h3>
+                <p id="drawer-subtitle" style="font-size: 0.75rem; color: var(--text-dim);"></p>
+            </div>
+            <button class="drawer-close" id="drawer-close">×</button>
+        </div>
+        <div class="drawer-body" id="drawer-body">
+            <!-- Classes will appear here -->
+        </div>
+    </div>
+
+    <script>
+        let registry = [];
+        let currentFilter = 'all';
+
+        async function init() {
+            try {
+                const res = await fetch('data.csv');
+                const text = await res.text();
+                parse(text);
+            } catch (err) {
+                console.error("Error loading CSV:", err);
+            }
+        }
+
+        function parse(csv) {
+            const rows = csv.split(/\r?\n/).filter(l => l.trim());
+            const headers = rows[0].split(',').map(h => h.trim());
+
+            registry = rows.slice(1).map(line => {
+                const parts = [];
+                let curr = '', inQ = false;
+                for (let char of line) {
+                    if (char === '"') inQ = !inQ;
+                    else if (char === ',' && !inQ) { parts.push(curr.trim()); curr = ''; }
+                    else curr += char;
+                }
+                parts.push(curr.trim());
+
+                const obj = {};
+                headers.forEach((h, i) => obj[h || `id_${i}`] = parts[i] || '');
+
+                const gStr = (obj.Group || '').toUpperCase();
+                const fStr = (obj['Lesson format'] || '').toLowerCase();
+
+                // Advanced Classification
+                if (gStr.includes('BONUS') || gStr.includes('CONGRATS') || fStr.includes('correction')) {
+                    obj.category = 'bonus';
+                } else if (gStr.includes('HTTP') || fStr.includes('extra')) {
+                    obj.category = 'extra';
+                } else if (gStr.includes('PRM')) {
+                    obj.category = 'premium';
+                } else if (gStr.includes('_IND') || fStr.includes('premium')) {
+                    obj.category = 'individual';
+                } else {
+                    obj.category = 'grupal';
+                }
+                return obj;
+            });
+
+            renderGrid();
+        }
+
+        function renderGrid(query = '') {
+            const container = document.getElementById('card-grid');
+            const main = document.getElementById('main-scroll');
+            container.innerHTML = '';
+
+            const groups = new Map();
+            registry.forEach(item => {
+                if (item.category === 'bonus') return;
+                const name = item.Group || 'Sin Título';
+                if (!groups.has(name)) groups.set(name, { name, items: [], type: item.category });
+                groups.get(name).items.push(item);
+            });
+
+            const filteredGroups = Array.from(groups.values()).filter(g => {
+                const matchesFilter = currentFilter === 'all' || g.type === currentFilter;
+                const matchesSearch = g.name.toLowerCase().includes(query.toLowerCase());
+                return matchesFilter && matchesSearch;
+            }).sort((a, b) => a.name.localeCompare(b.name));
+
+            // Stats Update
+            const totalMoney = filteredGroups.reduce((acc, g) => acc + g.items.reduce((a, b) => a + (parseInt(b.rate) || 0), 0), 0);
+            const totalBonus = registry.filter(d => d.category === 'bonus').reduce((a, b) => a + (parseInt(b.rate) || 0), 0);
+            const totalLessons = filteredGroups.reduce((acc, g) => acc + g.items.length, 0);
+
+            document.getElementById('stat-total').innerHTML = `
+                $${(totalMoney + totalBonus).toLocaleString()} 
+                <span style="font-size: 0.75em; color: var(--text-dim); margin-left: 8px; font-weight: 500;">
+                    (<span class="bonus-glow">$${totalBonus.toLocaleString()}</span>
+                    <span class="bonus-tag">bono</span>)
+                </span>
+            `;
+            document.getElementById('stat-groups').textContent = filteredGroups.length;
+            document.getElementById('stat-lessons').textContent = totalLessons;
+
+            filteredGroups.forEach(g => {
+                const card = document.createElement('div');
+                card.className = 'group-card';
+                card.innerHTML = `
+                    <div class="card-tag tag-${g.type[0]}">${g.type}</div>
+                    <h4 class="card-title">${g.name.startsWith('http') ? 'Recurso Externo / DRIVE' : g.name}</h4>
+                    <div class="card-info">
+                        <div class="qs-item">
+                            <span class="info-label">Sesiones</span>
+                            <span class="info-val">${g.items.length}</span>
+                        </div>
+                        <div class="qs-item" style="text-align: right;">
+                            <span class="info-label">Inversión</span>
+                            <span class="info-val">${(g.items.reduce((a, b) => a + (parseInt(b.rate) || 0), 0)).toLocaleString()}</span>
+                        </div>
+                    </div>
+                `;
+                card.onclick = () => openDrawer(g);
+                container.appendChild(card);
+            });
+        }
+
+        function openDrawer(group) {
+            document.getElementById('drawer-title').textContent = group.name.startsWith('http') ? 'Drive Resource' : group.name;
+            document.getElementById('drawer-subtitle').textContent = `${group.items.length} clases auditadas en categoría ${group.type}`;
+
+            const body = document.getElementById('drawer-body');
+            body.innerHTML = '';
+
+            group.items.sort((a, b) => new Date(b['Lesson date']) - new Date(a['Lesson date'])).forEach(l => {
+                const row = document.createElement('div');
+                row.className = 'class-row';
+                const d = new Date(l['Lesson date']);
+                row.innerHTML = `
+                    <span class="l-date">${d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</span>
+                    <span class="l-name">${l.Course || 'Corrección de Balance'}</span>
+                    <div class="l-footer">
+                        <span style="color: var(--text-dim)">${l['Lesson format']} • ${l.Length} min</span>
+                        <span class="l-price">${parseInt(l.rate).toLocaleString()} ${l.Currency}</span>
+                    </div>
+                `;
+                body.appendChild(row);
+            });
+
+            document.getElementById('drawer').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
+        }
+
+        function closeDrawer() {
+            document.getElementById('drawer').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+        }
+
+        function showBonus() {
+            const container = document.getElementById('card-grid');
+            container.innerHTML = '';
+
+            const bonuses = registry.filter(d => d.category === 'bonus');
+            const total = bonuses.reduce((a, b) => a + (parseInt(b.rate) || 0), 0);
+
+            const display = document.createElement('div');
+            display.className = 'bonus-content';
+            display.style.gridColumn = '1 / -1';
+            display.innerHTML = `
+                <div class="bonus-badge">Logro Desbloqueado</div>
+                <h1 class="bonus-title">Bono por Alta Retención</h1>
+                <p style="color: var(--text-dim); margin-bottom: 2rem; max-width: 400px; line-height: 1.6;">
+                    Este registro especial representa el incentivo acumulado por el excelente desempeño docente y retención de alumnos.
+                </p>
+                <div class="bonus-price">$ ${total.toLocaleString()} CLP</div>
+            `;
+            container.appendChild(display);
+
+            // Hide stats for bonus
+            document.getElementById('stat-total').innerHTML = `
+                $${total.toLocaleString()} 
+                <span style="font-size: 0.75em; color: var(--text-dim); margin-left: 8px; font-weight: 500;">
+                    (<span class="bonus-glow">$${total.toLocaleString()}</span>
+                    <span class="bonus-tag">bono</span>)
+                </span>
+            `;
+            document.getElementById('stat-groups').textContent = '1';
+            document.getElementById('stat-lessons').textContent = bonuses.length;
+        }
+
+        // Event Listeners
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.onclick = () => {
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                currentFilter = link.dataset.filter;
+                document.getElementById('current-title').textContent = link.textContent;
+
+                if (currentFilter === 'bonus') {
+                    showBonus();
+                } else {
+                    renderGrid(document.getElementById('group-search').value);
+                }
+            };
+        });
+
+        document.getElementById('drawer-close').onclick = closeDrawer;
+        document.getElementById('overlay').onclick = closeDrawer;
+        document.getElementById('group-search').oninput = (e) => renderGrid(e.target.value);
+
+        init();
+    </script>
+</body>
+
+</html>
