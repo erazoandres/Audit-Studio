@@ -10,6 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@500;700&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css" />
     <style>
         :root {
             --bg-body: #e2e8f0;
@@ -157,24 +158,9 @@
             height: 100vh;
             position: sticky;
             top: 0;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: var(--border) transparent;
+            overflow: hidden;
         }
 
-        /* Webkit Scrollbar Styling */
-        aside::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        aside::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        aside::-webkit-scrollbar-thumb {
-            background-color: var(--border);
-            border-radius: 4px;
-        }
 
         /* LOGO - Compacted */
         .brand-group {
@@ -351,6 +337,12 @@
             color: var(--accent);
             border-color: var(--accent);
             transform: rotate(15deg);
+        }
+
+        .tutorial-tool:hover {
+            color: #10b981;
+            border-color: #10b981;
+            transform: translateY(-2px) scale(1.05);
         }
 
         .tool-icon {
@@ -2003,6 +1995,10 @@
                         title="Void Midnight (High Contrast)"></div>
                 </div>
             </div>
+
+            <button class="tool-btn tutorial-tool" id="start-tutorial" title="Ver Tutorial">
+                <span>❓</span>
+            </button>
         </div>
     </aside>
 
@@ -2084,7 +2080,105 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
     <script>
+        console.log("Audit Studio Logic Loading...");
+        // Tutorial / Driver.js Logic
+        const driver = window.driver.js.driver;
+        const driverObj = driver({
+            showProgress: true,
+            animate: true,
+            steps: [
+                {
+                    element: '.brand-group',
+                    popover: {
+                        title: '🚀 Audit Studio',
+                        description: '¡Bienvenido! Este es tu centro de control para la gestión moderna de clases y auditorías.',
+                        side: "bottom",
+                        align: 'start'
+                    }
+                },
+                {
+                    element: '.upload-section',
+                    popover: {
+                        title: '📤 Subir Datos',
+                        description: 'Haz clic aquí para cargar tu archivo CSV con los datos de las sesiones.',
+                        side: "bottom",
+                        align: 'start'
+                    }
+                },
+                {
+                    element: '.nav-section-label',
+                    popover: {
+                        title: '📂 Categorías',
+                        description: 'Filtra tus sesiones por tipo: Premium, Grupales, Individuales, etc.',
+                        side: "right",
+                        align: 'start'
+                    }
+                },
+                {
+                    element: '.view-switcher',
+                    popover: {
+                        title: '🖥️ Vistas',
+                        description: 'Cambia entre vista de cuadrícula, lista, tabla o compacta según tu preferencia.',
+                        side: "bottom",
+                        align: 'end'
+                    }
+                },
+                {
+                    element: '.search-bar',
+                    popover: {
+                        title: '🔍 Buscador',
+                        description: 'Encuentra rápidamente cualquier grupo o sesión por su nombre.',
+                        side: "bottom",
+                        align: 'end'
+                    }
+                },
+                {
+                    element: '.quick-stats',
+                    popover: {
+                        title: '📊 Estadísticas Rápidas',
+                        description: 'Visualiza el total auditado, número de grupos y sesiones de un vistazo.',
+                        side: "bottom",
+                        align: 'start'
+                    }
+                },
+                {
+                    element: '.skin-tool',
+                    popover: {
+                        title: '🎨 Personalización',
+                        description: 'Cambia el tema visual de la aplicación con un solo clic.',
+                        side: "top",
+                        align: 'start'
+                    }
+                },
+                {
+                    element: '.discord-tool',
+                    popover: {
+                        title: '💬 Comunidad',
+                        description: 'Únete a nuestro servidor de Discord para soporte , novedades y reportar bugs, Gracias.',
+                        side: "top",
+                        align: 'start'
+                    }
+                },
+                {
+                    element: '#start-tutorial',
+                    popover: {
+                        title: '💡 Tutorial',
+                        description: 'Puedes volver a ver este tutorial en cualquier momento haciendo clic aquí.',
+                        side: "top",
+                        align: 'start'
+                    }
+                }
+            ]
+        });
+
+        window.driverObj = driverObj;
+
+        document.getElementById('start-tutorial').onclick = () => {
+            window.driverObj.drive();
+        };
+
         let registry = [];
         let currentFilter = 'all';
         let currentView = 'grid';
@@ -2419,6 +2513,14 @@
 
         document.getElementById('close-credits').onclick = () => {
             document.getElementById('credits-modal').classList.remove('active');
+
+            // Disparar click automáticamente en el botón de tutorial
+            setTimeout(() => {
+                const tutorialBtn = document.querySelector('.tutorial-tool');
+                if (tutorialBtn) {
+                    tutorialBtn.click();
+                }
+            }, 600);
         };
 
         // Mobile Menu Toggle
