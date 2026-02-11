@@ -468,6 +468,128 @@
             vertical-align: middle;
             font-weight: 900;
         }
+
+        /* View Modes */
+        .card-grid.view-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card-grid.view-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .card-grid.view-list .group-card {
+            flex-direction: row;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            gap: 2rem;
+        }
+
+        .card-grid.view-list .card-title {
+            margin-bottom: 0;
+            flex-grow: 1;
+        }
+
+        .card-grid.view-list .card-info {
+            border: none;
+            padding: 0;
+            margin: 0;
+            width: 300px;
+        }
+
+        .card-grid.view-table {
+            display: block;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg-card);
+        }
+
+        .card-grid.view-table .group-card {
+            border: none;
+            border-bottom: 1px solid var(--border);
+            border-radius: 0;
+            padding: 1rem 1.5rem;
+            display: grid;
+            grid-template-columns: 100px 1fr 120px 120px;
+            align-items: center;
+            background: transparent;
+        }
+
+        .card-grid.view-table .group-card:hover {
+            transform: none;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .card-grid.view-table .group-card:last-child {
+            border-bottom: none;
+        }
+
+        .card-grid.view-table .card-info {
+            border: none;
+            padding: 0;
+            margin: 0;
+            display: contents;
+        }
+
+        .card-grid.view-table .info-label {
+            display: none;
+        }
+
+        .card-grid.view-compact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .card-grid.view-compact .group-card {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-grid.view-compact .card-info,
+        .card-grid.view-compact .info-label {
+            display: none;
+        }
+
+        .card-grid.view-compact .card-title {
+            font-size: 0.8rem;
+            margin: 0;
+        }
+
+        .view-switcher {
+            display: flex;
+            background: var(--bg-card);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            gap: 4px;
+        }
+
+        .view-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: var(--transition);
+        }
+
+        .view-btn.active {
+            background: var(--accent);
+            color: white;
+        }
     </style>
 </head>
 
@@ -493,8 +615,16 @@
             <div class="page-title">
                 <h2 id="current-title">Panel de Control</h2>
             </div>
-            <div class="search-bar">
-                <input type="text" id="group-search" placeholder="Filtrar por nombre...">
+            <div style="display: flex; gap: 1.5rem; align-items: center;">
+                <div class="view-switcher">
+                    <button class="view-btn active" data-view="grid">Grid</button>
+                    <button class="view-btn" data-view="list">Lista</button>
+                    <button class="view-btn" data-view="table">Tabla</button>
+                    <button class="view-btn" data-view="compact">Compacto</button>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="group-search" placeholder="Filtrar por nombre...">
+                </div>
             </div>
         </div>
 
@@ -536,6 +666,7 @@
     <script>
         let registry = [];
         let currentFilter = 'all';
+        let currentView = 'grid';
 
         async function init() {
             try {
@@ -587,7 +718,7 @@
 
         function renderGrid(query = '') {
             const container = document.getElementById('card-grid');
-            const main = document.getElementById('main-scroll');
+            container.className = `card-grid view-${currentView}`;
             container.innerHTML = '';
 
             const groups = new Map();
@@ -715,6 +846,18 @@
                 if (currentFilter === 'bonus') {
                     showBonus();
                 } else {
+                    renderGrid(document.getElementById('group-search').value);
+                }
+            };
+        });
+
+        // View Switcher logic
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentView = btn.dataset.view;
+                if (currentFilter !== 'bonus') {
                     renderGrid(document.getElementById('group-search').value);
                 }
             };
