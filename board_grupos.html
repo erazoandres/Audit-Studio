@@ -560,6 +560,10 @@
                         <label for="fecha">Fecha de Inicio</label>
                         <input type="date" id="fecha" required>
                     </div>
+                    <div class="input-group">
+                        <label for="fecha_final">Fecha Final</label>
+                        <input type="date" id="fecha_final" required>
+                    </div>
                     <button type="submit" class="btn-submit">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -574,7 +578,12 @@
 
         <section class="groups-section">
             <div class="section-header">
-                <h2>Grupos Registrados</h2>
+                <div style="display: flex; align-items: center; gap: 1.5rem;">
+                    <h2>Grupos Registrados</h2>
+                    <input type="month" id="monthSelector"
+                        style="background: var(--bg-input); color: var(--text-main); border: 1px solid var(--border); border-radius: 12px; padding: 0.5rem 1rem; font-family: 'Inter', sans-serif; font-weight: 600; outline: none; transition: var(--transition);"
+                        onchange="renderGroups()">
+                </div>
                 <div id="countBadge" class="group-tag">0 Grupos</div>
             </div>
             <div id="groupsGrid" class="grid-display"></div>
@@ -593,8 +602,8 @@
                     <thead>
                         <tr>
                             <th>Nombre</th>
-                            <th style="width: 160px;">Fecha de Inicio</th>
-                            <th style="width: 120px;">Hora</th>
+                            <th style="width: 140px;">Fecha Final</th>
+                            <th style="width: 100px;">Hora</th>
                             <th style="width: 40px;"></th>
                         </tr>
                     </thead>
@@ -650,6 +659,13 @@
                 grouped[dayName].push(group);
             });
 
+            const monthVal = document.getElementById('monthSelector').value;
+            const [selectedYear, selectedMonth0] = monthVal.split('-').map(Number);
+            const selectedMonth = selectedMonth0 - 1; // 0-indexed for JS Date
+
+            // Analysis for selected month
+            const displayMonthName = new Date(selectedYear, selectedMonth).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }).toUpperCase();
+
             // Sort days based on dayOrder
             const sortedDayNames = Object.keys(grouped).sort((a, b) => {
                 const idxA = dayOrder.findIndex(d => a.includes(d));
@@ -676,15 +692,16 @@
                     const originalIndex = groups.indexOf(group);
                     const card = document.createElement('div');
                     card.className = 'group-card';
+                    const classCount = countMonthClasses(group.fecha, group.fecha_final, group.originalDia, selectedMonth, selectedYear);
                     card.innerHTML = `
                         <button class="delete-btn" onclick="deleteGroup(${originalIndex})" title="Eliminar">×</button>
                         <div class="group-header">
                             <span class="group-name">${group.nombre}</span>
-                            <span class="group-tag">Activo</span>
+                            <span class="group-tag" style="background: ${classCount > 0 ? 'var(--success)' : 'var(--text-dim)'}; color:#000">${classCount} clases (${displayMonthName.split(' ')[0]})</span>
                         </div>
                         <div class="group-details">
                             <div class="detail-item"><span class="detail-label">Horario</span><span class="detail-val">${formatTime(group.hora)}</span></div>
-                            <div class="detail-item"><span class="detail-label">Fecha</span><span class="detail-val">${group.fecha}</span></div>
+                            <div class="detail-item"><span class="detail-label">Vence</span><span class="detail-val">${group.fecha_final || 'N/A'}</span></div>
                         </div>
                     `;
                     grid.appendChild(card);
@@ -698,6 +715,31 @@
         function formatDateHeader(ds) {
             const d = new Date(ds + 'T00:00:00');
             return d.toLocaleDateString('es-ES', { weekday: 'long' }).toUpperCase();
+        }
+
+        function countMonthClasses(startStr, endStr, dayName, m, y) {
+            if (!endStr) return 0;
+
+            // Calculate start date as exactly 10 months before the end date
+            const end = new Date(endStr + 'T00:00:00');
+            const start = new Date(endStr + 'T00:00:00');
+            start.setMonth(start.getMonth() - 10);
+
+            let count = 0;
+            const daysInMonth = new Date(y, m + 1, 0).getDate();
+
+            const dayMap = { 'LUNES': 1, 'MARTES': 2, 'MIERCOLES': 3, 'MIÉRCOLES': 3, 'JUEVES': 4, 'VIERNES': 5, 'SABADO': 6, 'SÁBADO': 6, 'DOMINGO': 0 };
+            const targetDay = dayMap[dayName.toUpperCase()];
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const current = new Date(y, m, d);
+                if (current.getDay() === targetDay) {
+                    if (current >= start && current <= end) {
+                        count++;
+                    }
+                }
+            }
+            return count;
         }
 
         jsonInput.addEventListener('change', (e) => {
@@ -756,8 +798,9 @@
                     const timeStr = normalizeTime(item.hora || "12:00 PM");
                     pendingGroups.push({
                         nombre: item.nombre || "(Sin nombre)",
-                        originalDia: item.dia || "LUNES", // Store original day for grouping
-                        fecha: getDateForDay(dayNum),
+                        originalDia: item.dia || "LUNES",
+                        fecha: item.fecha || "", // Kept empty if not provided, calculation handles start date
+                        fecha_final: item["fecha final"] || item.fecha_final || "2026-12-31",
                         hora: timeStr
                     });
                 });
@@ -788,6 +831,7 @@
                         nombre: cleanName,
                         originalDia: originalDia,
                         fecha: getDateForDay(dayNum),
+                        fecha_final: "2026-12-31",
                         hora: timeStr
                     });
                 });
@@ -860,7 +904,7 @@
 
                     tr.innerHTML = `
                         <td><input type="text" value="${g.nombre}" onchange="pendingGroups[${i}].nombre=this.value" title="Nombre del grupo"></td>
-                        <td><input type="date" value="${g.fecha}" onchange="pendingGroups[${i}].fecha=this.value" title="Fecha de inicio"></td>
+                        <td><input type="date" value="${g.fecha_final}" onchange="pendingGroups[${i}].fecha_final=this.value" title="Fecha final"></td>
                         <td><input type="time" value="${g.hora}" onchange="pendingGroups[${i}].hora=this.value" title="Hora"></td>
                         <td style="text-align:center"><button style="color:#f43f5e;background:none;border:none;cursor:pointer;font-size:1.2rem" onclick="removePending(${i})" title="Eliminar">×</button></td>
                     `;
@@ -904,6 +948,7 @@
         groupForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const fechaInput = document.getElementById('fecha').value;
+            const fechaFinalInput = document.getElementById('fecha_final').value;
             const originalDia = new Date(fechaInput + 'T00:00:00')
                 .toLocaleDateString('es-ES', { weekday: 'long' })
                 .toUpperCase();
@@ -913,11 +958,16 @@
                 nombre: document.getElementById('nombre').value,
                 hora: document.getElementById('hora').value,
                 fecha: fechaInput,
+                fecha_final: fechaFinalInput,
                 originalDia: originalDia // Store day name for consistent grouping
             });
             saveGroups();
             groupForm.reset();
         });
+
+        // Initialize month selector with current month
+        const now = new Date();
+        document.getElementById('monthSelector').value = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
 
         renderGroups();
     </script>
