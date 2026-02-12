@@ -111,85 +111,82 @@
         }
 
         /* Form Design */
-        .register-card {
-            background: var(--bg-card);
+        /* Stats Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
             border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 2.5rem;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
             position: relative;
             overflow: hidden;
         }
 
-        .register-card::before {
+        .stat-item::after {
             content: '';
             position: absolute;
-            top: 0;
+            bottom: 0;
             left: 0;
             width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--accent), #818cf8);
+            height: 3px;
+            background: var(--border);
+            opacity: 0.3;
         }
 
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
+        .stat-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            background: rgba(15, 23, 42, 0.6);
         }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.6rem;
+        .stat-item.highlight {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(129, 140, 248, 0.1) 100%);
+            border-color: var(--accent);
         }
 
-        .input-group label {
-            font-size: 0.75rem;
-            font-weight: 600;
+        .stat-item.highlight::after {
+            background: var(--accent);
+            opacity: 1;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 0.05rem;
+            letter-spacing: 0.1rem;
             color: var(--text-dim);
         }
 
-        .input-group input {
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 0.8rem 1rem;
+        .stat-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
             color: var(--text-main);
-            font-size: 0.95rem;
-            outline: none;
-            transition: var(--transition);
         }
 
-        .input-group input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 4px var(--accent-glow);
+        .stat-sublabel {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            font-weight: 500;
         }
 
-        .btn-submit {
-            grid-column: 1 / -1;
-            background: var(--accent);
+        .payment-badge {
+            background: var(--success);
             color: #000;
-            border: none;
-            border-radius: 12px;
-            padding: 1rem;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: var(--transition);
-            margin-top: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.3);
-            filter: brightness(1.1);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
         }
 
         /* List Design */
@@ -509,6 +506,49 @@
                 padding: 0.5rem;
             }
         }
+
+        /* Graduation section styles */
+        .graduation-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(15, 23, 42, 0) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 24px;
+            animation: fadeIn 0.6s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .graduation-section::before {
+            content: 'GRADUACIÓN';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 4rem;
+            font-weight: 900;
+            color: rgba(16, 185, 129, 0.03);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .graduation-card {
+            background: rgba(15, 23, 42, 0.4) !important;
+            border-left: 4px solid var(--success) !important;
+        }
+
+        .graduation-badge {
+            background: var(--success);
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 4px;
+        }
     </style>
 </head>
 
@@ -542,35 +582,42 @@
             </div>
         </header>
 
-        <section class="register-card">
-            <form id="groupForm">
-                <div class="form-grid">
-                    <div class="input-group">
-                        <label for="nombre">Nombre del Grupo</label>
-                        <input type="text" id="nombre" placeholder="Ej: Guitarra Avanzada" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="hora">Hora</label>
-                        <input type="time" id="hora" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="fecha">Fecha de Inicio</label>
-                        <input type="date" id="fecha" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="fecha_final">Fecha Final</label>
-                        <input type="date" id="fecha_final" required>
-                    </div>
-                    <button type="submit" class="btn-submit">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="12" y1="5" x2="12" y2="19"></line>
-                            <line x1="5" y1="12" x2="19" y2="12"></line>
-                        </svg>
-                        Registrar Grupo
-                    </button>
+        <section class="register-card"
+            style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 24px; padding: 2rem; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3); position: relative; overflow: hidden;">
+            <div
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--accent), #818cf8);">
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-label">Individuales (IND)</span>
+                    <span class="stat-value" id="statsIndTotal">$0</span>
+                    <span class="stat-sublabel" id="statsIndCount">0 clases a $21.500</span>
                 </div>
-            </form>
+                <div class="stat-item">
+                    <span class="stat-label">Grupales</span>
+                    <span class="stat-value" id="statsGrpTotal">$0</span>
+                    <span class="stat-sublabel" id="statsGrpCount">0 clases a $32.250</span>
+                </div>
+                <div class="stat-item highlight">
+                    <span class="stat-label">Total Mes</span>
+                    <span class="stat-value" id="statsGrandTotal">$0</span>
+                    <span class="stat-sublabel" id="statsGrandCount">0 clases totales</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="graduationSection" class="graduation-section" style="display: none;">
+            <div class="section-header">
+                <h2 style="color: var(--success); display: flex; align-items: center; gap: 0.75rem;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                        <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                    </svg>
+                    Graduaciones de este Mes
+                </h2>
+            </div>
+            <div id="graduationGrid" class="grid-display"></div>
         </section>
 
         <section class="groups-section">
@@ -615,7 +662,6 @@
     </div>
 
     <script>
-        const groupForm = document.getElementById('groupForm');
         const groupsGrid = document.getElementById('groupsGrid');
         const countBadge = document.getElementById('countBadge');
         const jsonInput = document.getElementById('jsonInput');
@@ -633,6 +679,11 @@
 
         function renderGroups() {
             groupsGrid.innerHTML = '';
+            const graduationGrid = document.getElementById('graduationGrid');
+            const graduationSection = document.getElementById('graduationSection');
+            graduationGrid.innerHTML = '';
+            graduationSection.style.display = 'none';
+
             countBadge.innerText = `${groups.length} Grupos`;
 
             if (groups.length === 0) {
@@ -660,6 +711,49 @@
             const [selectedYear, selectedMonth0] = monthVal.split('-').map(Number);
             const selectedMonth = selectedMonth0 - 1; // 0-indexed for JS Date
 
+            // 2. Identify groups graduating in the selected month
+            // We strictly use the "fecha_final" which comes from "fecha final" in the JSON
+            const graduatingGroups = groups.filter(g => {
+                if (!g.fecha_final) return false;
+                // Standard format is YYYY-MM-DD
+                const parts = g.fecha_final.split('-');
+                if (parts.length < 2) return false;
+                const gYear = parseInt(parts[0], 10);
+                const gMonth = parseInt(parts[1], 10);
+                return gYear === selectedYear && gMonth === selectedMonth0;
+            });
+
+            if (graduatingGroups.length > 0) {
+                graduationSection.style.display = 'block';
+                graduatingGroups.forEach(group => {
+                    const card = document.createElement('div');
+                    card.className = 'group-card graduation-card';
+                    card.innerHTML = `
+                        <div class="card-main">
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <span class="group-name" style="font-size: 1.15rem; color: var(--success); letter-spacing: -0.02em;">${group.nombre}</span>
+                                <div class="graduation-badge">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Cierra el: ${formatDateShort(group.fecha_final)}
+                                </div>
+                            </div>
+                            <div class="card-meta">
+                                <div class="meta-item" style="color: #fff; font-weight: 800; font-size: 0.75rem; background: var(--bg-input); padding: 6px 12px; border-radius: 10px; border: 1px solid var(--border);">
+                                    ${(group.originalDia || 'LUNES').toUpperCase()}
+                                </div>
+                                <div class="meta-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    ${formatTime(group.hora)}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    graduationGrid.appendChild(card);
+                });
+            } else {
+                graduationSection.style.display = 'none';
+            }
+
             // Analysis for selected month
             const displayMonthName = new Date(selectedYear, selectedMonth).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }).toUpperCase();
 
@@ -670,7 +764,17 @@
                 return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
             });
 
+            let summary = { indCount: 0, indTotal: 0, grpCount: 0, grpTotal: 0 };
+
             sortedDayNames.forEach(dayName => {
+                // Filter to show only active groups in the main grid
+                const activeGroupsInDay = grouped[dayName].filter(group => {
+                    const count = countMonthClasses(group.fecha, group.fecha_final, group.originalDia, selectedMonth, selectedYear);
+                    return count > 0;
+                });
+
+                if (activeGroupsInDay.length === 0) return;
+
                 const daySection = document.createElement('div');
                 daySection.className = 'day-group';
 
@@ -683,13 +787,25 @@
                 grid.className = 'grid-display';
 
                 // Sort groups within the day by time
-                grouped[dayName].sort((a, b) => a.hora.localeCompare(b.hora));
+                activeGroupsInDay.sort((a, b) => a.hora.localeCompare(b.hora));
 
-                grouped[dayName].forEach(group => {
+                activeGroupsInDay.forEach(group => {
                     const originalIndex = groups.indexOf(group);
                     const card = document.createElement('div');
                     card.className = 'group-card';
                     const classCount = countMonthClasses(group.fecha, group.fecha_final, group.originalDia, selectedMonth, selectedYear);
+
+                    const isInd = group.nombre.toUpperCase().includes('IND');
+                    const rate = isInd ? 21500 : 32250;
+                    const payment = classCount * rate;
+
+                    if (isInd) {
+                        summary.indCount += classCount;
+                        summary.indTotal += payment;
+                    } else {
+                        summary.grpCount += classCount;
+                        summary.grpTotal += payment;
+                    }
 
                     card.innerHTML = `
                         <div class="card-main">
@@ -705,12 +821,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <span class="class-badge" style="${classCount === 0 ? 'opacity: 0.5; filter: grayscale(1)' : ''}">
-                                ${classCount} clases
-                            </span>
+                        <div style="display: flex; align-items: center; gap: 1.2rem;">
+                            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                                <span class="class-badge" style="${classCount === 0 ? 'opacity: 0.5; filter: grayscale(1)' : ''}">
+                                    ${classCount} clases
+                                </span>
+                                ${classCount > 0 ? `<span class="payment-badge">${formatCurrency(payment)}</span>` : ''}
+                            </div>
                             <button class="delete-btn" onclick="deleteGroup(${originalIndex})" title="Eliminar">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6V6a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                             </button>
                         </div>
                     `;
@@ -720,6 +839,14 @@
                 daySection.appendChild(grid);
                 groupsGrid.appendChild(daySection);
             });
+
+            // Update Statistics Panel
+            document.getElementById('statsIndTotal').innerText = formatCurrency(summary.indTotal);
+            document.getElementById('statsIndCount').innerText = `${summary.indCount} clases a $21.500`;
+            document.getElementById('statsGrpTotal').innerText = formatCurrency(summary.grpTotal);
+            document.getElementById('statsGrpCount').innerText = `${summary.grpCount} clases a $32.250`;
+            document.getElementById('statsGrandTotal').innerText = formatCurrency(summary.indTotal + summary.grpTotal);
+            document.getElementById('statsGrandCount').innerText = `${summary.indCount + summary.grpCount} clases totales`;
         }
 
         function formatDateHeader(ds) {
@@ -950,31 +1077,23 @@
             const d = new Date(ds + 'T00:00:00');
             return d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
         }
+        function formatDateShort(ds) {
+            const d = new Date(ds + 'T00:00:00');
+            return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+        function formatCurrency(val) {
+            return new Intl.NumberFormat('es-CO', {
+                style: 'currency',
+                currency: 'COP',
+                maximumFractionDigits: 0
+            }).format(val);
+        }
         function formatTime(ts) {
             const [h, m] = ts.split(':');
             const hour = parseInt(h);
             return `${hour % 12 || 12}:${m} ${hour >= 12 ? 'PM' : 'AM'}`;
         }
         function deleteGroup(i) { if (confirm('¿Eliminar grupo?')) { groups.splice(i, 1); saveGroups(); } }
-        groupForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const fechaInput = document.getElementById('fecha').value;
-            const fechaFinalInput = document.getElementById('fecha_final').value;
-            const originalDia = new Date(fechaInput + 'T00:00:00')
-                .toLocaleDateString('es-ES', { weekday: 'long' })
-                .toUpperCase();
-
-            groups.push({
-                id: Date.now(),
-                nombre: document.getElementById('nombre').value,
-                hora: document.getElementById('hora').value,
-                fecha: fechaInput,
-                fecha_final: fechaFinalInput,
-                originalDia: originalDia // Store day name for consistent grouping
-            });
-            saveGroups();
-            groupForm.reset();
-        });
 
         // Initialize month selector with current month
         const now = new Date();
