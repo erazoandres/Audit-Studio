@@ -173,6 +173,99 @@
             animation: scaleIn 0.3s ease-out forwards;
         }
 
+        /* Return Capsule (Novel Navigation) */
+        .return-capsule {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 9000;
+            overflow: hidden;
+            width: 42px;
+            height: 42px;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .return-capsule span {
+            opacity: 0;
+            white-space: nowrap;
+            font-size: 0.8rem;
+            font-weight: 600;
+            width: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .return-capsule:hover {
+            width: 130px;
+            /* Expand */
+            background: var(--bg-card);
+            border-color: var(--accent);
+            color: var(--text-main);
+            gap: 10px;
+            padding-left: 16px;
+            padding-right: 16px;
+            justify-content: flex-start;
+        }
+
+        .return-capsule:hover span {
+            opacity: 1;
+            width: auto;
+        }
+
+        .return-capsule svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            transition: transform 0.3s;
+            animation: pulse-gaze 3s infinite ease-in-out, nudge-left 3s infinite ease-in-out;
+        }
+
+        .return-capsule:hover svg {
+            color: var(--accent);
+            animation: none;
+            /* Stop animation on hover for cleaner interaction */
+            transform: translateX(-3px);
+        }
+
+        @keyframes pulse-gaze {
+
+            0%,
+            100% {
+                color: var(--text-dim);
+                filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+            }
+
+            50% {
+                color: var(--text-main);
+                filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+            }
+        }
+
+        @keyframes nudge-left {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            50% {
+                transform: translateX(-3px);
+            }
+        }
+
         header {
             display: flex;
             justify-content: space-between;
@@ -1020,194 +1113,201 @@
     </style>
 </head>
 
-<body>
-    <div class="container">
-        <header>
-            <div class="brand">
-                <h1>LogicLedger</h1>
-                <p>Gestión de cohortes y estudiantes de programación</p>
-            </div>
-            <div style="margin-left: auto; margin-right: 1.5rem;">
-                <a href="https://github.com/erazoandres/LogicLedger" target="_blank"
-                    style="color: var(--text-dim); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; font-weight: 500; transition: var(--transition);"
-                    onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-dim)'">
-                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.041-1.416-4.041-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                    </svg>
-                    Ver en GitHub
-                </a>
-            </div>
-            <div class="header-actions">
-                <input type="file" id="jsonInput" accept=".json" style="display: none;" />
-                <button class="btn-import" onclick="document.getElementById('jsonInput').click()">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="17 8 12 3 7 8"></polyline>
-                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                    </svg>
-                    Importar JSON
-                </button>
-                <div class="skin-section-tool">
-                    <button class="tool-btn skin-tool" id="skin-toggle" title="Personalizar Apariencia">
-                        <span>🖌️</span>
-                    </button>
 
-                    <div class="skin-options-popover" id="skin-popover">
-                        <div class="theme-opt active opt-titanium" data-theme="default" title="Titanium Silver"></div>
-                        <div class="theme-opt opt-emerald" data-theme="theme-emerald" title="Emerald Luxe"></div>
-                        <div class="theme-opt opt-amethyst" data-theme="theme-amethyst" title="Deep Amethyst"></div>
-                        <div class="theme-opt opt-gold" data-theme="theme-gold" title="Champagne Gold"></div>
-                        <div class="theme-opt opt-midnight" data-theme="theme-midnight"
-                            title="Void Midnight (High Contrast)"></div>
-                    </div>
+<div class="container">
+    <a href="index.html" class="return-capsule" title="Volver al Inicio">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Hub Principal</span>
+    </a>
+    <header>
+        <a href="index.html" class="brand" style="text-decoration: none; display: block; cursor: pointer;">
+            <h1>LogicLedger</h1>
+            <p>Gestión de cohortes y estudiantes de programación</p>
+        </a>
+        <div style="margin-left: auto; margin-right: 1.5rem;">
+            <a href="https://github.com/erazoandres/LogicLedger" target="_blank"
+                style="color: var(--text-dim); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; font-weight: 500; transition: var(--transition);"
+                onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-dim)'">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.041-1.416-4.041-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                </svg>
+                Ver en GitHub
+            </a>
+        </div>
+        <div class="header-actions">
+            <input type="file" id="jsonInput" accept=".json" style="display: none;" />
+            <button class="btn-import" onclick="document.getElementById('jsonInput').click()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Importar JSON
+            </button>
+            <div class="skin-section-tool">
+                <button class="tool-btn skin-tool" id="skin-toggle" title="Personalizar Apariencia">
+                    <span>🖌️</span>
+                </button>
+
+                <div class="skin-options-popover" id="skin-popover">
+                    <div class="theme-opt active opt-titanium" data-theme="default" title="Titanium Silver"></div>
+                    <div class="theme-opt opt-emerald" data-theme="theme-emerald" title="Emerald Luxe"></div>
+                    <div class="theme-opt opt-amethyst" data-theme="theme-amethyst" title="Deep Amethyst"></div>
+                    <div class="theme-opt opt-gold" data-theme="theme-gold" title="Champagne Gold"></div>
+                    <div class="theme-opt opt-midnight" data-theme="theme-midnight"
+                        title="Void Midnight (High Contrast)"></div>
                 </div>
-                <button class="btn-import btn-danger" onclick="clearAllHistory()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2.5">
-                        <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
-                        </path>
-                    </svg>
-                    Limpiar
-                </button>
-                <button class="btn-import" id="start-tutorial" title="Ver Tutorial">
-                    ❓
-                </button>
             </div>
-        </header>
+            <button class="btn-import btn-danger" onclick="clearAllHistory()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                    </path>
+                </svg>
+                Limpiar
+            </button>
+            <button class="btn-import" id="start-tutorial" title="Ver Tutorial">
+                ❓
+            </button>
+        </div>
+    </header>
 
-        <section class="stats-grid">
-            <div class="stat-item">
-                <span class="stat-label">Clases IND</span>
-                <span class="stat-value" id="statsIndTotal">$0</span>
-                <span class="stat-sublabel" id="statsIndCount">0 clases</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Clases GRUPALES</span>
-                <span class="stat-value" id="statsGrpTotal">$0</span>
-                <span class="stat-sublabel" id="statsGrpCount">0 clases</span>
-            </div>
-            <div class="stat-item highlight">
-                <span class="stat-label">Total Mes</span>
-                <span class="stat-value" id="statsGrandTotal">$0</span>
-                <span class="stat-sublabel" id="statsGrandCount">0 clases totales</span>
-            </div>
-        </section>
+    <section class="stats-grid">
+        <div class="stat-item">
+            <span class="stat-label">Clases IND</span>
+            <span class="stat-value" id="statsIndTotal">$0</span>
+            <span class="stat-sublabel" id="statsIndCount">0 clases</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-label">Clases GRUPALES</span>
+            <span class="stat-value" id="statsGrpTotal">$0</span>
+            <span class="stat-sublabel" id="statsGrpCount">0 clases</span>
+        </div>
+        <div class="stat-item highlight">
+            <span class="stat-label">Total Mes</span>
+            <span class="stat-value" id="statsGrandTotal">$0</span>
+            <span class="stat-sublabel" id="statsGrandCount">0 clases totales</span>
+        </div>
+    </section>
 
-        <section id="graduationSection" class="graduation-section" style="display: none;">
-            <div class="section-header">
-                <h2>Cierres de este Mes</h2>
-            </div>
-            <div id="graduationGrid" class="graduation-grid"></div>
-        </section>
+    <section id="graduationSection" class="graduation-section" style="display: none;">
+        <div class="section-header">
+            <h2>Cierres de este Mes</h2>
+        </div>
+        <div id="graduationGrid" class="graduation-grid"></div>
+    </section>
 
-        <section class="groups-section">
-            <div class="section-header">
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <h2>Mis Grupos</h2>
-                    <input type="month" id="monthSelector" onchange="renderGroups()">
-                </div>
-                <div id="countBadge" class="group-tag">0 Grupos</div>
+    <section class="groups-section">
+        <div class="section-header">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <h2>Mis Grupos</h2>
+                <input type="month" id="monthSelector" onchange="renderGroups()">
             </div>
-            <div id="groupsGrid" class="grid-display"></div>
-        </section>
-    </div>
+            <div id="countBadge" class="group-tag">0 Grupos</div>
+        </div>
+        <div id="groupsGrid" class="grid-display"></div>
+    </section>
+</div>
 
-    <!-- Import Modal -->
-    <div id="importModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Resumen de Importación</h3>
-                <span id="importCount" class="group-tag">0 seleccionados</span>
-            </div>
-            <div class="modal-body">
-                <table class="modal-table">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th style="width: 140px;">Fecha Final</th>
-                            <th style="width: 100px;">Hora</th>
-                            <th style="width: 40px;"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="importPreviewBody"></tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
-                <button class="btn-confirm" onclick="confirmImport()">Importar Todo</button>
-            </div>
+<!-- Import Modal -->
+<div id="importModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Resumen de Importación</h3>
+            <span id="importCount" class="group-tag">0 seleccionados</span>
+        </div>
+        <div class="modal-body">
+            <table class="modal-table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th style="width: 140px;">Fecha Final</th>
+                        <th style="width: 100px;">Hora</th>
+                        <th style="width: 40px;"></th>
+                    </tr>
+                </thead>
+                <tbody id="importPreviewBody"></tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+            <button class="btn-confirm" onclick="confirmImport()">Importar Todo</button>
         </div>
     </div>
+</div>
 
-    <script>
-        const groupsGrid = document.getElementById('groupsGrid');
-        const countBadge = document.getElementById('countBadge');
-        const jsonInput = document.getElementById('jsonInput');
-        const importModal = document.getElementById('importModal');
-        const importPreviewBody = document.getElementById('importPreviewBody');
-        const importCount = document.getElementById('importCount');
+<script>
+    const groupsGrid = document.getElementById('groupsGrid');
+    const countBadge = document.getElementById('countBadge');
+    const jsonInput = document.getElementById('jsonInput');
+    const importModal = document.getElementById('importModal');
+    const importPreviewBody = document.getElementById('importPreviewBody');
+    const importCount = document.getElementById('importCount');
 
-        let groups = []; // Forzamos inicio vacío para limpieza total
-        let pendingGroups = [];
+    let groups = []; // Forzamos inicio vacío para limpieza total
+    let pendingGroups = [];
 
-        function saveGroups() {
-            localStorage.setItem('audit_groups', JSON.stringify(groups));
-            renderGroups();
-        }
+    function saveGroups() {
+        localStorage.setItem('audit_groups', JSON.stringify(groups));
+        renderGroups();
+    }
 
-        function renderGroups() {
-            groupsGrid.innerHTML = '';
-            const graduationGrid = document.getElementById('graduationGrid');
-            const graduationSection = document.getElementById('graduationSection');
-            graduationGrid.innerHTML = '';
-            graduationSection.style.display = 'none';
+    function renderGroups() {
+        groupsGrid.innerHTML = '';
+        const graduationGrid = document.getElementById('graduationGrid');
+        const graduationSection = document.getElementById('graduationSection');
+        graduationGrid.innerHTML = '';
+        graduationSection.style.display = 'none';
 
-            countBadge.innerText = `${groups.length} Grupos`;
+        countBadge.innerText = `${groups.length} Grupos`;
 
-            if (groups.length === 0) {
-                groupsGrid.innerHTML = `
+        if (groups.length === 0) {
+            groupsGrid.innerHTML = `
                     <div class="empty-state">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         <p>No hay grupos registrados aún.</p>
                         <p style="font-size: 0.8rem; margin-top: 0.5rem;">Crea un grupo o arrastra un archivo JSON.</p>
                     </div>
                 `;
-                return;
-            }
+            return;
+        }
 
-            const dayOrder = ['LUNES', 'MARTES', 'MIERCOLES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'SÁBADO', 'DOMINGO'];
+        const dayOrder = ['LUNES', 'MARTES', 'MIERCOLES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'SÁBADO', 'DOMINGO'];
 
-            // Group by weekday name using the stored originalDia
-            const grouped = {};
-            groups.forEach(group => {
-                const dayName = (group.originalDia || "LUNES").toUpperCase();
-                if (!grouped[dayName]) grouped[dayName] = [];
-                grouped[dayName].push(group);
-            });
+        // Group by weekday name using the stored originalDia
+        const grouped = {};
+        groups.forEach(group => {
+            const dayName = (group.originalDia || "LUNES").toUpperCase();
+            if (!grouped[dayName]) grouped[dayName] = [];
+            grouped[dayName].push(group);
+        });
 
-            const monthVal = document.getElementById('monthSelector').value;
-            const [selectedYear, selectedMonth0] = monthVal.split('-').map(Number);
-            const selectedMonth = selectedMonth0 - 1; // 0-indexed for JS Date
+        const monthVal = document.getElementById('monthSelector').value;
+        const [selectedYear, selectedMonth0] = monthVal.split('-').map(Number);
+        const selectedMonth = selectedMonth0 - 1; // 0-indexed for JS Date
 
-            // 2. Identify groups graduating in the selected month
-            // We strictly use the "fecha_final" which comes from "fecha final" in the JSON
-            const graduatingGroups = groups.filter(g => {
-                if (!g.fecha_final) return false;
-                // Standard format is YYYY-MM-DD
-                const parts = g.fecha_final.split('-');
-                if (parts.length < 2) return false;
-                const gYear = parseInt(parts[0], 10);
-                const gMonth = parseInt(parts[1], 10);
-                return gYear === selectedYear && gMonth === selectedMonth0;
-            });
+        // 2. Identify groups graduating in the selected month
+        // We strictly use the "fecha_final" which comes from "fecha final" in the JSON
+        const graduatingGroups = groups.filter(g => {
+            if (!g.fecha_final) return false;
+            // Standard format is YYYY-MM-DD
+            const parts = g.fecha_final.split('-');
+            if (parts.length < 2) return false;
+            const gYear = parseInt(parts[0], 10);
+            const gMonth = parseInt(parts[1], 10);
+            return gYear === selectedYear && gMonth === selectedMonth0;
+        });
 
-            if (graduatingGroups.length > 0) {
-                graduationSection.style.display = 'block';
-                graduatingGroups.forEach(group => {
-                    const card = document.createElement('div');
-                    card.className = 'graduation-card animate-slide';
-                    card.innerHTML = `
+        if (graduatingGroups.length > 0) {
+            graduationSection.style.display = 'block';
+            graduatingGroups.forEach(group => {
+                const card = document.createElement('div');
+                card.className = 'graduation-card animate-slide';
+                card.innerHTML = `
                         <span class="group-name" style="color: var(--success); min-width: auto;">${group.nombre}</span>
                         <div class="card-meta" style="flex-direction: column; align-items: flex-start; gap: 0.25rem;">
                             <div class="graduation-badge">
@@ -1220,69 +1320,69 @@
                             </div>
                         </div>
                     `;
-                    graduationGrid.appendChild(card);
-                });
-            } else {
-                graduationSection.style.display = 'none';
-            }
+                graduationGrid.appendChild(card);
+            });
+        } else {
+            graduationSection.style.display = 'none';
+        }
 
-            // Analysis for selected month
-            const displayMonthName = new Date(selectedYear, selectedMonth).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }).toUpperCase();
+        // Analysis for selected month
+        const displayMonthName = new Date(selectedYear, selectedMonth).toLocaleDateString('es-ES', { month: 'long', year: 'numeric' }).toUpperCase();
 
-            // Sort days based on dayOrder
-            const sortedDayNames = Object.keys(grouped).sort((a, b) => {
-                const idxA = dayOrder.findIndex(d => a.includes(d));
-                const idxB = dayOrder.findIndex(d => b.includes(d));
-                return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
+        // Sort days based on dayOrder
+        const sortedDayNames = Object.keys(grouped).sort((a, b) => {
+            const idxA = dayOrder.findIndex(d => a.includes(d));
+            const idxB = dayOrder.findIndex(d => b.includes(d));
+            return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
+        });
+
+        let globalDelay = 0;
+        let summary = { indCount: 0, indTotal: 0, grpCount: 0, grpTotal: 0 };
+
+        sortedDayNames.forEach(dayName => {
+            const activeGroupsInDay = grouped[dayName].filter(group => {
+                const data = countMonthClasses(group.fecha, group.fecha_final, group.originalDia, selectedMonth, selectedYear);
+                return data.status !== 'finished';
             });
 
-            let globalDelay = 0;
-            let summary = { indCount: 0, indTotal: 0, grpCount: 0, grpTotal: 0 };
+            if (activeGroupsInDay.length === 0) return;
 
-            sortedDayNames.forEach(dayName => {
-                const activeGroupsInDay = grouped[dayName].filter(group => {
-                    const data = countMonthClasses(group.fecha, group.fecha_final, group.originalDia, selectedMonth, selectedYear);
-                    return data.status !== 'finished';
-                });
+            const daySection = document.createElement('div');
+            daySection.className = 'day-group';
+            daySection.innerHTML = `<div class="day-header">${dayName}</div>`;
 
-                if (activeGroupsInDay.length === 0) return;
+            const grid = document.createElement('div');
+            grid.className = 'grid-display';
 
-                const daySection = document.createElement('div');
-                daySection.className = 'day-group';
-                daySection.innerHTML = `<div class="day-header">${dayName}</div>`;
+            activeGroupsInDay.sort((a, b) => a.hora.localeCompare(b.hora)).forEach((group, index) => {
+                const originalIndex = groups.indexOf(group);
+                const card = document.createElement('div');
+                card.className = 'group-card animate-slide';
+                card.style.animationDelay = `${globalDelay * 0.05}s`;
+                globalDelay++;
 
-                const grid = document.createElement('div');
-                grid.className = 'grid-display';
+                const data = countMonthClasses(group.fecha, group.fecha_final, group.originalDia, selectedMonth, selectedYear);
+                const classCount = data.count;
 
-                activeGroupsInDay.sort((a, b) => a.hora.localeCompare(b.hora)).forEach((group, index) => {
-                    const originalIndex = groups.indexOf(group);
-                    const card = document.createElement('div');
-                    card.className = 'group-card animate-slide';
-                    card.style.animationDelay = `${globalDelay * 0.05}s`;
-                    globalDelay++;
+                const isInd = group.nombre.toUpperCase().includes('IND');
+                const payment = classCount * (isInd ? 21500 : 32250);
 
-                    const data = countMonthClasses(group.fecha, group.fecha_final, group.originalDia, selectedMonth, selectedYear);
-                    const classCount = data.count;
+                if (isInd) { summary.indCount += classCount; summary.indTotal += payment; }
+                else { summary.grpCount += classCount; summary.grpTotal += payment; }
 
-                    const isInd = group.nombre.toUpperCase().includes('IND');
-                    const payment = classCount * (isInd ? 21500 : 32250);
-
-                    if (isInd) { summary.indCount += classCount; summary.indTotal += payment; }
-                    else { summary.grpCount += classCount; summary.grpTotal += payment; }
-
-                    let statusContent = '';
-                    if (data.status === 'not-started') {
-                        statusContent = `<span class="not-started-badge">No iniciado</span>`;
-                    } else {
-                        statusContent = `
+                let statusContent = '';
+                if (data.status === 'not-started') {
+                    statusContent = `<span class="not-started-badge">No iniciado</span>`;
+                } else {
+                    statusContent = `
                             <div style="display:flex; align-items:center; gap:0.5rem">
                                 <span class="class-badge">${classCount} clases</span>
                                 ${classCount > 0 ? `<span class="payment-badge">${formatCurrency(payment)}</span>` : ''}
                             </div>
                         `;
-                    }
+                }
 
-                    card.innerHTML = `
+                card.innerHTML = `
                         <div class="card-main">
                             <span class="group-name">${group.nombre}</span>
                             <div class="card-meta">
@@ -1303,517 +1403,526 @@
                             </button>
                         </div>
                     `;
-                    grid.appendChild(card);
-                });
-
-                daySection.appendChild(grid);
-                groupsGrid.appendChild(daySection);
+                grid.appendChild(card);
             });
 
-            // Update Statistics Panel
-            document.getElementById('statsIndTotal').innerText = formatCurrency(summary.indTotal);
-            document.getElementById('statsIndCount').innerText = `${summary.indCount} clases`;
-            document.getElementById('statsGrpTotal').innerText = formatCurrency(summary.grpTotal);
-            document.getElementById('statsGrpCount').innerText = `${summary.grpCount} clases`;
-            document.getElementById('statsGrandTotal').innerText = formatCurrency(summary.indTotal + summary.grpTotal);
-            document.getElementById('statsGrandCount').innerText = `${summary.indCount + summary.grpCount} clases totales`;
-        }
-
-        function formatDateHeader(ds) {
-            const d = new Date(ds + 'T00:00:00');
-            return d.toLocaleDateString('es-ES', { weekday: 'long' }).toUpperCase();
-        }
-
-        function countMonthClasses(startStr, endStr, dayName, m, y) {
-            if (!endStr) return { count: 0, status: 'active' };
-
-            // Calculate start date: End Date minus 39 intervals (39 * 7 days)
-            // A 40-class course has 39 week-long gaps between the first and last class.
-            const end = new Date(endStr + 'T00:00:00');
-            const start = new Date(endStr + 'T00:00:00');
-            start.setDate(start.getDate() - (39 * 7));
-
-            // View window (selected month)
-            const viewMonthStart = new Date(y, m, 1);
-            const viewMonthEnd = new Date(y, m + 1, 0);
-
-            // Determine status
-            if (viewMonthEnd < start) return { count: 0, status: 'not-started' };
-            if (viewMonthStart > end) return { count: 0, status: 'finished' };
-
-            let count = 0;
-            const daysInMonth = viewMonthEnd.getDate();
-            const dayMap = { 'LUNES': 1, 'MARTES': 2, 'MIERCOLES': 3, 'MIÉRCOLES': 3, 'JUEVES': 4, 'VIERNES': 5, 'SABADO': 6, 'SÁBADO': 6, 'DOMINGO': 0 };
-            const targetDay = dayMap[dayName.toUpperCase()];
-
-            for (let d = 1; d <= daysInMonth; d++) {
-                const current = new Date(y, m, d);
-                if (current.getDay() === targetDay) {
-                    if (current >= start && current <= end) {
-                        count++;
-                    }
-                }
-            }
-            return { count, status: 'active' };
-        }
-
-        jsonInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                let text = event.target.result.trim();
-                console.log("Original text length:", text.length);
-
-                // Extremely robust markdown cleaning
-                if (text.includes('```')) {
-                    // Remove opening backticks with optional language identifier
-                    text = text.replace(/^```[a-z]*\s*\n/i, '');
-                    // Remove closing backticks at the end of the content
-                    text = text.replace(/\n\s*```\s*$/i, '');
-                }
-
-                text = text.trim();
-                console.log("Cleaned text:", text);
-
-                try {
-                    const parsed = JSON.parse(text);
-                    processJsonData(parsed);
-                } catch (err) {
-                    console.error("JSON Parse Error:", err);
-                    alert('JSON inválido. Error: ' + err.message);
-                }
-            };
-            reader.readAsText(file);
+            daySection.appendChild(grid);
+            groupsGrid.appendChild(daySection);
         });
 
-        function processJsonData(data) {
-            pendingGroups = [];
-            const dayMap = {
-                'LUNES': 1, 'MARTES': 2, 'MIERCOLES': 3, 'MIÉRCOLES': 3, 'JUEVES': 4,
-                'VIERNES': 5, 'SABADO': 6, 'SÁBADO': 6, 'DOMINGO': 0
-            };
+        // Update Statistics Panel
+        document.getElementById('statsIndTotal').innerText = formatCurrency(summary.indTotal);
+        document.getElementById('statsIndCount').innerText = `${summary.indCount} clases`;
+        document.getElementById('statsGrpTotal').innerText = formatCurrency(summary.grpTotal);
+        document.getElementById('statsGrpCount').innerText = `${summary.grpCount} clases`;
+        document.getElementById('statsGrandTotal').innerText = formatCurrency(summary.indTotal + summary.grpTotal);
+        document.getElementById('statsGrandCount').innerText = `${summary.indCount + summary.grpCount} clases totales`;
+    }
 
-            if (Array.isArray(data)) {
-                data.forEach(item => {
-                    if (item.nombre === undefined) return;
-                    const dayStr = (item.dia || "").toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                    let dayNum = 1;
-                    if (dayMap[dayStr] !== undefined) {
-                        dayNum = dayMap[dayStr];
-                    } else {
-                        // Try to find if the day string contains any key from dayMap
-                        for (const [key, val] of Object.entries(dayMap)) {
-                            if (dayStr.includes(key)) {
-                                dayNum = val;
-                                break;
-                            }
-                        }
-                    }
-                    const timeStr = normalizeTime(item.hora || "12:00 PM");
-                    pendingGroups.push({
-                        nombre: item.nombre || "(Sin nombre)",
-                        originalDia: item.dia || "LUNES",
-                        fecha: item.fecha || "", // Kept empty if not provided, calculation handles start date
-                        fecha_final: item["fecha final"] || item.fecha_final || "2026-12-31",
-                        hora: timeStr
-                    });
-                });
-            } else {
-                // Fallback for object format
-                Object.keys(data).forEach(key => {
-                    let dayNum = 1;
-                    let originalDia = "LUNES";
-                    const upperKey = key.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-                    for (const [d, v] of Object.entries(dayMap)) {
-                        if (upperKey.includes(d)) {
-                            dayNum = v;
-                            originalDia = d;
+    function formatDateHeader(ds) {
+        const d = new Date(ds + 'T00:00:00');
+        return d.toLocaleDateString('es-ES', { weekday: 'long' }).toUpperCase();
+    }
+
+    function countMonthClasses(startStr, endStr, dayName, m, y) {
+        if (!endStr) return { count: 0, status: 'active' };
+
+        // Calculate start date: End Date minus 39 intervals (39 * 7 days)
+        // A 40-class course has 39 week-long gaps between the first and last class.
+        const end = new Date(endStr + 'T00:00:00');
+        const start = new Date(endStr + 'T00:00:00');
+        start.setDate(start.getDate() - (39 * 7));
+
+        // View window (selected month)
+        const viewMonthStart = new Date(y, m, 1);
+        const viewMonthEnd = new Date(y, m + 1, 0);
+
+        // Determine status
+        if (viewMonthEnd < start) return { count: 0, status: 'not-started' };
+        if (viewMonthStart > end) return { count: 0, status: 'finished' };
+
+        let count = 0;
+        const daysInMonth = viewMonthEnd.getDate();
+        const dayMap = { 'LUNES': 1, 'MARTES': 2, 'MIERCOLES': 3, 'MIÉRCOLES': 3, 'JUEVES': 4, 'VIERNES': 5, 'SABADO': 6, 'SÁBADO': 6, 'DOMINGO': 0 };
+        const targetDay = dayMap[dayName.toUpperCase()];
+
+        for (let d = 1; d <= daysInMonth; d++) {
+            const current = new Date(y, m, d);
+            if (current.getDay() === targetDay) {
+                if (current >= start && current <= end) {
+                    count++;
+                }
+            }
+        }
+        return { count, status: 'active' };
+    }
+
+    jsonInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            let text = event.target.result.trim();
+            console.log("Original text length:", text.length);
+
+            // Extremely robust markdown cleaning
+            if (text.includes('```')) {
+                // Remove opening backticks with optional language identifier
+                text = text.replace(/^```[a-z]*\s*\n/i, '');
+                // Remove closing backticks at the end of the content
+                text = text.replace(/\n\s*```\s*$/i, '');
+            }
+
+            text = text.trim();
+            console.log("Cleaned text:", text);
+
+            try {
+                const parsed = JSON.parse(text);
+                processJsonData(parsed);
+            } catch (err) {
+                console.error("JSON Parse Error:", err);
+                alert('JSON inválido. Error: ' + err.message);
+            }
+        };
+        reader.readAsText(file);
+    });
+
+    function processJsonData(data) {
+        pendingGroups = [];
+        const dayMap = {
+            'LUNES': 1, 'MARTES': 2, 'MIERCOLES': 3, 'MIÉRCOLES': 3, 'JUEVES': 4,
+            'VIERNES': 5, 'SABADO': 6, 'SÁBADO': 6, 'DOMINGO': 0
+        };
+
+        if (Array.isArray(data)) {
+            data.forEach(item => {
+                if (item.nombre === undefined) return;
+                const dayStr = (item.dia || "").toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                let dayNum = 1;
+                if (dayMap[dayStr] !== undefined) {
+                    dayNum = dayMap[dayStr];
+                } else {
+                    // Try to find if the day string contains any key from dayMap
+                    for (const [key, val] of Object.entries(dayMap)) {
+                        if (dayStr.includes(key)) {
+                            dayNum = val;
                             break;
                         }
                     }
-
-                    let cleanName = key;
-                    if (key.includes(' - ')) {
-                        cleanName = key.split(' - ').slice(1).join(' - ').trim();
-                    } else if (key.includes('-')) {
-                        cleanName = key.split('-').pop().trim();
-                    }
-                    if (!cleanName) cleanName = key;
-
-                    const timeStr = normalizeTime(key);
-                    pendingGroups.push({
-                        nombre: cleanName,
-                        originalDia: originalDia,
-                        fecha: getDateForDay(dayNum),
-                        fecha_final: "2026-12-31",
-                        hora: timeStr
-                    });
+                }
+                const timeStr = normalizeTime(item.hora || "12:00 PM");
+                pendingGroups.push({
+                    nombre: item.nombre || "(Sin nombre)",
+                    originalDia: item.dia || "LUNES",
+                    fecha: item.fecha || "", // Kept empty if not provided, calculation handles start date
+                    fecha_final: item["fecha final"] || item.fecha_final || "2026-12-31",
+                    hora: timeStr
                 });
-            }
-
-            renderImportPreview();
-            importModal.classList.add('active');
-        }
-
-        function normalizeTime(str) {
-            str = str.toUpperCase();
-            // Match HH:MM PM/AM or just HH PM/AM
-            const timeMatch = str.match(/(\d{1,2})(?::(\d{2}))?\s*(PM|AM)?/i);
-            if (!timeMatch) return "15:00";
-
-            let hour = parseInt(timeMatch[1]);
-            let mins = parseInt(timeMatch[2]) || 0;
-            const ampm = timeMatch[3];
-
-            if (ampm === 'PM' && hour < 12) hour += 12;
-            if (ampm === 'AM' && hour === 12) hour = 0;
-
-            return `${hour.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
-        }
-
-        function getDateForDay(dayNum) {
-            const d = new Date();
-            const current = d.getDay();
-            let diff = dayNum - current;
-            if (diff < 0) diff += 7;
-            d.setDate(d.getDate() + diff);
-            return d.toISOString().split('T')[0];
-        }
-
-        function renderImportPreview() {
-            importPreviewBody.innerHTML = '';
-            importCount.innerText = `${pendingGroups.length} detectados`;
-
-            const dayOrder = ['LUNES', 'MARTES', 'MIERCOLES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'SÁBADO', 'DOMINGO'];
-
-            // Group pending by their original dia field
-            const grouped = {};
-            pendingGroups.forEach((g, i) => {
-                const dayKey = (g.originalDia || "LUNES").toUpperCase();
-                if (!grouped[dayKey]) grouped[dayKey] = [];
-                grouped[dayKey].push({ data: g, index: i });
             });
+        } else {
+            // Fallback for object format
+            Object.keys(data).forEach(key => {
+                let dayNum = 1;
+                let originalDia = "LUNES";
+                const upperKey = key.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                for (const [d, v] of Object.entries(dayMap)) {
+                    if (upperKey.includes(d)) {
+                        dayNum = v;
+                        originalDia = d;
+                        break;
+                    }
+                }
 
-            // Sort days according to dayOrder
-            const sortedDays = Object.keys(grouped).sort((a, b) => {
-                let idxA = dayOrder.findIndex(d => a.includes(d));
-                let idxB = dayOrder.findIndex(d => b.includes(d));
-                return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
+                let cleanName = key;
+                if (key.includes(' - ')) {
+                    cleanName = key.split(' - ').slice(1).join(' - ').trim();
+                } else if (key.includes('-')) {
+                    cleanName = key.split('-').pop().trim();
+                }
+                if (!cleanName) cleanName = key;
+
+                const timeStr = normalizeTime(key);
+                pendingGroups.push({
+                    nombre: cleanName,
+                    originalDia: originalDia,
+                    fecha: getDateForDay(dayNum),
+                    fecha_final: "2026-12-31",
+                    hora: timeStr
+                });
             });
+        }
 
-            sortedDays.forEach(dayName => {
-                // Add group header row
-                const headerRow = document.createElement('tr');
-                headerRow.className = 'modal-group-header';
-                headerRow.innerHTML = `<td colspan="4" style="text-align: left; padding: 0.8rem 1rem;">${dayName}</td>`;
-                importPreviewBody.appendChild(headerRow);
+        renderImportPreview();
+        importModal.classList.add('active');
+    }
 
-                // Sort groups by time within the day
-                grouped[dayName].sort((a, b) => a.data.hora.localeCompare(b.data.hora));
+    function normalizeTime(str) {
+        str = str.toUpperCase();
+        // Match HH:MM PM/AM or just HH PM/AM
+        const timeMatch = str.match(/(\d{1,2})(?::(\d{2}))?\s*(PM|AM)?/i);
+        if (!timeMatch) return "15:00";
 
-                grouped[dayName].forEach(item => {
-                    const g = item.data;
-                    const i = item.index;
-                    const tr = document.createElement('tr');
+        let hour = parseInt(timeMatch[1]);
+        let mins = parseInt(timeMatch[2]) || 0;
+        const ampm = timeMatch[3];
 
-                    tr.innerHTML = `
+        if (ampm === 'PM' && hour < 12) hour += 12;
+        if (ampm === 'AM' && hour === 12) hour = 0;
+
+        return `${hour.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+    }
+
+    function getDateForDay(dayNum) {
+        const d = new Date();
+        const current = d.getDay();
+        let diff = dayNum - current;
+        if (diff < 0) diff += 7;
+        d.setDate(d.getDate() + diff);
+        return d.toISOString().split('T')[0];
+    }
+
+    function renderImportPreview() {
+        importPreviewBody.innerHTML = '';
+        importCount.innerText = `${pendingGroups.length} detectados`;
+
+        const dayOrder = ['LUNES', 'MARTES', 'MIERCOLES', 'MIÉRCOLES', 'JUEVES', 'VIERNES', 'SABADO', 'SÁBADO', 'DOMINGO'];
+
+        // Group pending by their original dia field
+        const grouped = {};
+        pendingGroups.forEach((g, i) => {
+            const dayKey = (g.originalDia || "LUNES").toUpperCase();
+            if (!grouped[dayKey]) grouped[dayKey] = [];
+            grouped[dayKey].push({ data: g, index: i });
+        });
+
+        // Sort days according to dayOrder
+        const sortedDays = Object.keys(grouped).sort((a, b) => {
+            let idxA = dayOrder.findIndex(d => a.includes(d));
+            let idxB = dayOrder.findIndex(d => b.includes(d));
+            return (idxA === -1 ? 99 : idxA) - (idxB === -1 ? 99 : idxB);
+        });
+
+        sortedDays.forEach(dayName => {
+            // Add group header row
+            const headerRow = document.createElement('tr');
+            headerRow.className = 'modal-group-header';
+            headerRow.innerHTML = `<td colspan="4" style="text-align: left; padding: 0.8rem 1rem;">${dayName}</td>`;
+            importPreviewBody.appendChild(headerRow);
+
+            // Sort groups by time within the day
+            grouped[dayName].sort((a, b) => a.data.hora.localeCompare(b.data.hora));
+
+            grouped[dayName].forEach(item => {
+                const g = item.data;
+                const i = item.index;
+                const tr = document.createElement('tr');
+
+                tr.innerHTML = `
                         <td><input type="text" value="${g.nombre}" onchange="pendingGroups[${i}].nombre=this.value" title="Nombre del grupo"></td>
                         <td><input type="date" value="${g.fecha_final}" onchange="pendingGroups[${i}].fecha_final=this.value" title="Fecha final"></td>
                         <td><input type="time" value="${g.hora}" onchange="pendingGroups[${i}].hora=this.value" title="Hora"></td>
                         <td style="text-align:center"><button style="color:#f43f5e;background:none;border:none;cursor:pointer;font-size:1.2rem" onclick="removePending(${i})" title="Eliminar">×</button></td>
                     `;
-                    importPreviewBody.appendChild(tr);
-                });
+                importPreviewBody.appendChild(tr);
             });
-        }
+        });
+    }
 
-        window.removePending = (i) => { pendingGroups.splice(i, 1); renderImportPreview(); };
-        window.closeModal = () => { importModal.classList.remove('active'); jsonInput.value = ''; };
+    window.removePending = (i) => { pendingGroups.splice(i, 1); renderImportPreview(); };
+    window.closeModal = () => { importModal.classList.remove('active'); jsonInput.value = ''; };
 
-        window.confirmImport = () => {
-            // Absolute clear of history
+    window.confirmImport = () => {
+        // Absolute clear of history
+        localStorage.removeItem('audit_groups');
+        groups = [];
+
+        // Apply new data
+        groups = JSON.parse(JSON.stringify(pendingGroups));
+        saveGroups();
+        closeModal();
+    };
+
+    window.clearAllHistory = () => {
+        if (confirm('¿Estás seguro de que deseas borrar TODO el historial de grupos? Esta acción no se puede deshacer.')) {
             localStorage.removeItem('audit_groups');
             groups = [];
-
-            // Apply new data
-            groups = JSON.parse(JSON.stringify(pendingGroups));
             saveGroups();
-            closeModal();
-        };
-
-        window.clearAllHistory = () => {
-            if (confirm('¿Estás seguro de que deseas borrar TODO el historial de grupos? Esta acción no se puede deshacer.')) {
-                localStorage.removeItem('audit_groups');
-                groups = [];
-                saveGroups();
-            }
-        };
-
-        function formatDate(ds) {
-            const d = new Date(ds + 'T00:00:00');
-            return d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
         }
-        function formatDateShort(ds) {
-            const d = new Date(ds + 'T00:00:00');
-            return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
-        }
-        function formatCurrency(val) {
-            return new Intl.NumberFormat('es-CO', {
-                style: 'currency',
-                currency: 'COP',
-                maximumFractionDigits: 0
-            }).format(val);
-        }
-        function formatTime(ts) {
-            const [h, m] = ts.split(':');
-            const hour = parseInt(h);
-            return `${hour % 12 || 12}:${m} ${hour >= 12 ? 'PM' : 'AM'}`;
-        }
-        function deleteGroup(i) { if (confirm('¿Eliminar grupo?')) { groups.splice(i, 1); saveGroups(); } }
+    };
 
-        // Initialize month selector with current month
-        const now = new Date();
-        document.getElementById('monthSelector').value = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+    function formatDate(ds) {
+        const d = new Date(ds + 'T00:00:00');
+        return d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' }).toUpperCase();
+    }
+    function formatDateShort(ds) {
+        const d = new Date(ds + 'T00:00:00');
+        return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+    }
+    function formatCurrency(val) {
+        return new Intl.NumberFormat('es-CO', {
+            style: 'currency',
+            currency: 'COP',
+            maximumFractionDigits: 0
+        }).format(val);
+    }
+    function formatTime(ts) {
+        const [h, m] = ts.split(':');
+        const hour = parseInt(h);
+        return `${hour % 12 || 12}:${m} ${hour >= 12 ? 'PM' : 'AM'}`;
+    }
+    function deleteGroup(i) { if (confirm('¿Eliminar grupo?')) { groups.splice(i, 1); saveGroups(); } }
 
-        renderGroups();
-    </script>
-    <div id="notification-container" class="notification-container"></div>
-    <!-- Welcome Modal -->
-    <div class="credits-overlay" id="credits-modal">
-        <div class="credits-card">
-            <div class="credits-logo">📊</div>
-            <h2 class="credits-title">LogicLedger</h2>
-            <span class="credits-auth">By Andrés Erazo</span>
+    // Initialize month selector with current month
+    const now = new Date();
+    document.getElementById('monthSelector').value = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}`;
 
-            <p class="credits-desc">
-                Tu centro de control para la auditoría de pagos y gestión inteligente de cohortes.
-            </p>
+    renderGroups();
+</script>
+<div id="notification-container" class="notification-container"></div>
+<!-- Welcome Modal -->
+<div class="credits-overlay" id="credits-modal">
+    <div class="credits-card">
+        <div class="credits-logo">📊</div>
+        <h2 class="credits-title">LogicLedger</h2>
+        <span class="credits-auth">By Andrés Erazo</span>
 
-            <div class="github-cta">
-                <a href="https://github.com/erazoandres/LogicLedger" target="_blank" class="github-btn">
-                    <span>🌟</span> Apoyar en GitHub
-                </a>
-                <div class="star-note">
-                    <span style="color: #fbbf24;">★</span> Star en el repositorio oficial
-                </div>
+        <p class="credits-desc">
+            Tu centro de control para la auditoría de pagos y gestión inteligente de cohortes.
+        </p>
+
+        <div class="github-cta">
+            <a href="https://github.com/erazoandres/LogicLedger" target="_blank" class="github-btn">
+                <span>🌟</span> Apoyar en GitHub
+            </a>
+            <div class="star-note">
+                <span style="color: #fbbf24;">★</span> Star en el repositorio oficial
             </div>
-
-            <button class="enter-btn" id="close-credits">Entrar al Sistema</button>
         </div>
+
+        <button class="enter-btn" id="close-credits">Entrar al Sistema</button>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
-    <script>
-        // Tutorial / Driver.js Logic
-        const driver = window.driver.js.driver;
-        const driverObj = driver({
-            showProgress: true,
-            animate: true,
-            onDestroyed: () => {
-                autoLoadDefaultData();
-            },
-            steps: [
-                {
-                    element: '.brand',
-                    popover: {
-                        title: '📊 LogicLedger',
-                        description: '¡Bienvenido! Este es tu panel de control para el seguimiento de pagos y cohortes.',
-                        side: "bottom",
-                        align: 'start'
-                    }
-                },
-                {
-                    element: '.btn-import:not(.btn-danger):not(#start-tutorial)',
-                    popover: {
-                        title: '📥 Importar Datos',
-                        description: 'Carga tus grupos desde un archivo JSON para empezar a gestionar.',
-                        side: "bottom",
-                        align: 'end'
-                    }
-                },
-                {
-                    element: '.stats-grid',
-                    popover: {
-                        title: '💰 Estadísticas Mensuales',
-                        description: 'Visualiza el total de pagos para clases individuales y grupales del mes seleccionado.',
-                        side: "bottom",
-                        align: 'start'
-                    }
-                },
-                {
-                    element: '#monthSelector',
-                    popover: {
-                        title: '📅 Selector de Mes',
-                        description: 'Filtra los grupos y cálculos por mes y año para una auditoría precisa.',
-                        side: "right",
-                        align: 'start'
-                    }
-                },
-                {
-                    element: '#graduationSection',
-                    popover: {
-                        title: '🎓 Cierres de Mes',
-                        description: 'Aquí aparecerán los grupos que finalizan sus clases en el mes seleccionado.',
-                        side: "bottom",
-                        align: 'start'
-                    }
-                },
-                {
-                    element: '#groupsGrid',
-                    popover: {
-                        title: '📋 Lista de Grupos',
-                        description: 'Tus grupos organizados por día. Cada tarjeta muestra el nombre, horario y pago calculado.',
-                        side: "top",
-                        align: 'start'
-                    }
-                },
-                {
-                    element: '#start-tutorial',
-                    popover: {
-                        title: '💡 Tutorial',
-                        description: 'Puedes repetir este recorrido en cualquier momento haciendo clic aquí.',
-                        side: "bottom",
-                        align: 'end'
-                    }
+<script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+<script>
+    // Tutorial / Driver.js Logic
+    const driver = window.driver.js.driver;
+    const driverObj = driver({
+        showProgress: true,
+        animate: true,
+        onDestroyed: () => {
+            autoLoadDefaultData();
+        },
+        steps: [
+            {
+                element: '.brand',
+                popover: {
+                    title: '📊 LogicLedger',
+                    description: '¡Bienvenido! Este es tu panel de control para el seguimiento de pagos y cohortes.',
+                    side: "bottom",
+                    align: 'start'
                 }
-            ]
-        });
+            },
+            {
+                element: '.btn-import:not(.btn-danger):not(#start-tutorial)',
+                popover: {
+                    title: '📥 Importar Datos',
+                    description: 'Carga tus grupos desde un archivo JSON para empezar a gestionar.',
+                    side: "bottom",
+                    align: 'end'
+                }
+            },
+            {
+                element: '.stats-grid',
+                popover: {
+                    title: '💰 Estadísticas Mensuales',
+                    description: 'Visualiza el total de pagos para clases individuales y grupales del mes seleccionado.',
+                    side: "bottom",
+                    align: 'start'
+                }
+            },
+            {
+                element: '.return-capsule',
+                popover: {
+                    title: '🏠 Hub Principal',
+                    description: '¿Terminaste aquí? Haz clic en esta cápsula para volver al menú de aplicaciones.',
+                    side: "top",
+                    align: 'start'
+                }
+            },
+            {
+                element: '#monthSelector',
+                popover: {
+                    title: '📅 Selector de Mes',
+                    description: 'Filtra los grupos y cálculos por mes y año para una auditoría precisa.',
+                    side: "right",
+                    align: 'start'
+                }
+            },
+            {
+                element: '#graduationSection',
+                popover: {
+                    title: '🎓 Cierres de Mes',
+                    description: 'Aquí aparecerán los grupos que finalizan sus clases en el mes seleccionado.',
+                    side: "bottom",
+                    align: 'start'
+                }
+            },
+            {
+                element: '#groupsGrid',
+                popover: {
+                    title: '📋 Lista de Grupos',
+                    description: 'Tus grupos organizados por día. Cada tarjeta muestra el nombre, horario y pago calculado.',
+                    side: "top",
+                    align: 'start'
+                }
+            },
+            {
+                element: '#start-tutorial',
+                popover: {
+                    title: '💡 Tutorial',
+                    description: 'Puedes repetir este recorrido en cualquier momento haciendo clic aquí.',
+                    side: "bottom",
+                    align: 'end'
+                }
+            }
+        ]
+    });
 
-        document.getElementById('start-tutorial').onclick = () => {
+    document.getElementById('start-tutorial').onclick = () => {
+        driverObj.drive();
+    };
+
+    // Welcome Modal Logic
+    function showCredits() {
+        const overlay = document.getElementById('credits-modal');
+        setTimeout(() => {
+            overlay.classList.add('active');
+        }, 500);
+    }
+
+    document.getElementById('close-credits').onclick = () => {
+        document.getElementById('credits-modal').classList.remove('active');
+        // Trigger tutorial immediately after closing modal
+        setTimeout(() => {
             driverObj.drive();
-        };
+        }, 400);
+    };
 
-        // Welcome Modal Logic
-        function showCredits() {
-            const overlay = document.getElementById('credits-modal');
-            setTimeout(() => {
-                overlay.classList.add('active');
-            }, 500);
-        }
-
-        document.getElementById('close-credits').onclick = () => {
-            document.getElementById('credits-modal').classList.remove('active');
-            // Trigger tutorial immediately after closing modal
-            setTimeout(() => {
-                driverObj.drive();
-            }, 400);
-        };
-
-        function showNotification(message, type = 'success') {
-            const container = document.getElementById('notification-container');
-            container.innerHTML = ''; // Solo una notificación a la vez
-            const toast = document.createElement('div');
-            toast.className = `notification ${type}`;
-            const icon = type === 'success' ? '✅' : '❌';
-            toast.innerHTML = `
+    function showNotification(message, type = 'success') {
+        const container = document.getElementById('notification-container');
+        container.innerHTML = ''; // Solo una notificación a la vez
+        const toast = document.createElement('div');
+        toast.className = `notification ${type}`;
+        const icon = type === 'success' ? '✅' : '❌';
+        toast.innerHTML = `
                 <span class="notification-icon">${icon}</span>
                 <span class="notification-message">${message}</span>
                 <div class="notification-progress"></div>
             `;
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.add('active'), 100);
-            setTimeout(() => {
-                toast.classList.remove('active');
-                setTimeout(() => toast.remove(), 700);
-            }, 4000);
+        container.appendChild(toast);
+        setTimeout(() => toast.classList.add('active'), 100);
+        setTimeout(() => {
+            toast.classList.remove('active');
+            setTimeout(() => toast.remove(), 700);
+        }, 4000);
+    }
+
+    let isDataLoaded = false;
+    async function autoLoadDefaultData() {
+        if (isDataLoaded) return;
+        isDataLoaded = true;
+
+        // Limpiamos los datos actuales para que la carga se sienta real
+        groups = [];
+        renderGroups();
+
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        try {
+            showNotification("Cargando datos de prueba...", "success");
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            console.log("Fetching groups.json...");
+
+            const res = await fetch('groups.json');
+            if (!res.ok) throw new Error("No groups.json found");
+            const data = await res.json();
+
+            // Mapeo de campos para compatibilidad (especialmente 'fecha final' -> 'fecha_final')
+            groups = data.map(item => ({
+                nombre: item.nombre || "(Sin nombre)",
+                originalDia: item.dia || "LUNES",
+                fecha: item.fecha || "",
+                fecha_final: item["fecha final"] || item.fecha_final || "2026-12-31",
+                hora: normalizeTime(item.hora || "12:00 PM")
+            }));
+
+            saveGroups();
+            console.log("Auto-load successful in LogicLedger.");
+        } catch (err) {
+            console.error("Auto-load failed in LogicLedger:", err);
+            isDataLoaded = false;
+        }
+    }
+
+
+
+    /* --- SKIN / THEME MANAGER --- */
+    const skinToggle = document.getElementById('skin-toggle');
+    const skinPopover = document.getElementById('skin-popover');
+    const themeOpts = document.querySelectorAll('.theme-opt');
+
+    // Toggle Popover
+    skinToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        skinPopover.classList.toggle('active');
+    });
+
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+        if (!skinToggle.contains(e.target) && !skinPopover.contains(e.target)) {
+            skinPopover.classList.remove('active');
+        }
+    });
+
+    // Theme Selection
+    themeOpts.forEach(opt => {
+        opt.addEventListener('click', () => {
+            const theme = opt.dataset.theme;
+            applyTheme(theme);
+            skinPopover.classList.remove('active');
+        });
+    });
+
+    function applyTheme(themeName) {
+        // Remove all theme classes
+        document.body.classList.remove('theme-emerald', 'theme-amethyst', 'theme-gold', 'theme-midnight');
+
+        // Add new theme class if not default
+        if (themeName !== 'default') {
+            document.body.classList.add(themeName);
         }
 
-        let isDataLoaded = false;
-        async function autoLoadDefaultData() {
-            if (isDataLoaded) return;
-            isDataLoaded = true;
-
-            // Limpiamos los datos actuales para que la carga se sienta real
-            groups = [];
-            renderGroups();
-
-            await new Promise(resolve => setTimeout(resolve, 1000));
-
-            try {
-                showNotification("Cargando datos de prueba...", "success");
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                console.log("Fetching groups.json...");
-
-                const res = await fetch('groups.json');
-                if (!res.ok) throw new Error("No groups.json found");
-                const data = await res.json();
-
-                // Mapeo de campos para compatibilidad (especialmente 'fecha final' -> 'fecha_final')
-                groups = data.map(item => ({
-                    nombre: item.nombre || "(Sin nombre)",
-                    originalDia: item.dia || "LUNES",
-                    fecha: item.fecha || "",
-                    fecha_final: item["fecha final"] || item.fecha_final || "2026-12-31",
-                    hora: normalizeTime(item.hora || "12:00 PM")
-                }));
-
-                saveGroups();
-                console.log("Auto-load successful in LogicLedger.");
-            } catch (err) {
-                console.error("Auto-load failed in LogicLedger:", err);
-                isDataLoaded = false;
-            }
-        }
-
-
-
-        /* --- SKIN / THEME MANAGER --- */
-        const skinToggle = document.getElementById('skin-toggle');
-        const skinPopover = document.getElementById('skin-popover');
-        const themeOpts = document.querySelectorAll('.theme-opt');
-
-        // Toggle Popover
-        skinToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            skinPopover.classList.toggle('active');
-        });
-
-        // Close on click outside
-        document.addEventListener('click', (e) => {
-            if (!skinToggle.contains(e.target) && !skinPopover.contains(e.target)) {
-                skinPopover.classList.remove('active');
-            }
-        });
-
-        // Theme Selection
+        // Update active state in popover
         themeOpts.forEach(opt => {
-            opt.addEventListener('click', () => {
-                const theme = opt.dataset.theme;
-                applyTheme(theme);
-                skinPopover.classList.remove('active');
-            });
+            if (opt.dataset.theme === themeName) {
+                opt.classList.add('active');
+            } else {
+                opt.classList.remove('active');
+            }
         });
 
-        function applyTheme(themeName) {
-            // Remove all theme classes
-            document.body.classList.remove('theme-emerald', 'theme-amethyst', 'theme-gold', 'theme-midnight');
+        // Save preference
+        localStorage.setItem('logic-ledger-theme', themeName);
+    }
 
-            // Add new theme class if not default
-            if (themeName !== 'default') {
-                document.body.classList.add(themeName);
-            }
+    // Init Theme
+    const savedTheme = localStorage.getItem('logic-ledger-theme') || 'default';
+    applyTheme(savedTheme);
 
-            // Update active state in popover
-            themeOpts.forEach(opt => {
-                if (opt.dataset.theme === themeName) {
-                    opt.classList.add('active');
-                } else {
-                    opt.classList.remove('active');
-                }
-            });
-
-            // Save preference
-            localStorage.setItem('logic-ledger-theme', themeName);
-        }
-
-        // Init Theme
-        const savedTheme = localStorage.getItem('logic-ledger-theme') || 'default';
-        applyTheme(savedTheme);
-
-        // Initialize
-        showCredits();
-    </script>
+    // Initialize
+    showCredits();
+</script>
 </body>
 
 </html>
