@@ -1,0 +1,127 @@
+[
+  {
+    "dia": "LUNES",
+    "hora": "02:00 PM",
+    "nombre": "COL8959"
+  },
+  {
+    "dia": "LUNES",
+    "hora": "03:00 PM",
+    "nombre": "COL383_IND"
+  },
+  {
+    "dia": "LUNES",
+    "hora": "04:00 PM",
+    "nombre": "COL11121"
+  },
+  {
+    "dia": "LUNES",
+    "hora": "05:00 PM",
+    "nombre": "COL9001"
+  },
+  {
+    "dia": "LUNES",
+    "hora": "07:00 PM",
+    "nombre": "COL10916"
+  },
+  {
+    "dia": "MARTES",
+    "hora": "04:00 PM",
+    "nombre": "PRM_COL10958"
+  },
+  {
+    "dia": "MARTES",
+    "hora": "05:30 PM",
+    "nombre": "PRM_COL7779"
+  },
+  {
+    "dia": "MARTES",
+    "hora": "06:00 PM",
+    "nombre": "PRM_COL7628"
+  },
+  {
+    "dia": "MIERCOLES",
+    "hora": "02:00 PM",
+    "nombre": "COL10131"
+  },
+  {
+    "dia": "MIERCOLES",
+    "hora": "03:00 PM",
+    "nombre": "COL6846"
+  },
+  {
+    "dia": "MIERCOLES",
+    "hora": "05:00 PM",
+    "nombre": "COL10608"
+  },
+  {
+    "dia": "MIERCOLES",
+    "hora": "06:30 PM",
+    "nombre": "COL7945"
+  },
+  {
+    "dia": "MIERCOLES",
+    "hora": "08:00 PM",
+    "nombre": "COL7235"
+  },
+  {
+    "dia": "JUEVES",
+    "hora": "04:00 PM",
+    "nombre": "PRM_COL7845"
+  },
+  {
+    "dia": "JUEVES",
+    "hora": "06:00 PM",
+    "nombre": "PRM_COL8699"
+  },
+  {
+    "dia": "JUEVES",
+    "hora": "07:30 PM",
+    "nombre": "PRM_COL7898"
+  },
+  {
+    "dia": "VIERNES",
+    "hora": "11:00 AM",
+    "nombre": "COL503_IND"
+  },
+  {
+    "dia": "VIERNES",
+    "hora": "02:00 PM",
+    "nombre": "COL10311"
+  },
+  {
+    "dia": "VIERNES",
+    "hora": "05:00 PM",
+    "nombre": "PRM_COL8984"
+  },
+  {
+    "dia": "VIERNES",
+    "hora": "07:00 PM",
+    "nombre": "COL509_IND"
+  },
+  {
+    "dia": "VIERNES",
+    "hora": "08:00 PM",
+    "nombre": "COL362_IND"
+  },
+  {
+    "dia": "SABADO",
+    "hora": "10:00 AM",
+    "nombre": "COL10336"
+  },
+  {
+    "dia": "SABADO",
+    "hora": "11:00 AM",
+    "nombre": "COL10025"
+  },
+  {
+    "dia": "SABADO",
+    "hora": "03:00 PM",
+    "nombre": "COL238_IND"
+  },
+  {
+    "dia": "DOMINGO",
+    "hora": "09:00 AM",
+    "nombre": "COL11181"
+  }
+]
