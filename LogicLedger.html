@@ -12,18 +12,92 @@
         rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.css" />
     <style>
+        /* Light Theme (Default - Titanium Silver) matching AuditStudio */
         :root {
-            --bg-body: #020617;
-            --bg-card: #0f172a;
-            --bg-input: #1e293b;
-            --text-main: #f8fafc;
+            --bg-body: #e2e8f0;
+            --bg-card: #ffffff;
+            --bg-input: #f1f5f9;
+            --text-main: #1e293b;
             --text-dim: #64748b;
-            --accent: #38bdf8;
-            --accent-glow: rgba(56, 189, 248, 0.15);
-            --border: rgba(51, 65, 85, 0.5);
+            --accent-rgb: 71, 85, 105;
+            --accent: #475569;
+            --accent-glow: rgba(71, 85, 105, 0.1);
+            /* Mapped from soft */
+            --border: #cbd5e1;
+
+            --premium: #a855f7;
+            --grupal: #0ea5e9;
+            --individual: #10b981;
+            --extra: #f43f5e;
+            --bonus: #f59e0b;
+            --replacement: #f97316;
+
             --success: #10b981;
             --warning: #f59e0b;
-            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+            --transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        /* Skins Definitions (Full Atmosphere Overrides) */
+        /* Skins Definitions (Full Atmosphere Overrides) */
+        body.theme-emerald {
+            --bg-body: #0f1f1a;
+            --bg-card: #1a2f28;
+            --bg-input: #254038;
+            --text-main: #ffffff;
+            --text-dim: #888888;
+            --border: #254038;
+            --accent-rgb: 16, 185, 129;
+            --accent: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.1);
+        }
+
+        body.theme-amethyst {
+            --bg-body: #16141f;
+            --bg-card: #242133;
+            --bg-input: #35304d;
+            --text-main: #ffffff;
+            --text-dim: #888888;
+            --border: #35304d;
+            --accent-rgb: 168, 85, 247;
+            --accent: #a855f7;
+            --accent-glow: rgba(168, 85, 247, 0.1);
+        }
+
+        body.theme-gold {
+            --bg-body: #1f1b16;
+            --bg-card: #2e2922;
+            --bg-input: #4a4136;
+            --text-main: #ffffff;
+            --text-dim: #888888;
+            --border: #4a4136;
+            --accent-rgb: 251, 191, 36;
+            --accent: #fbbf24;
+            --accent-glow: rgba(251, 191, 36, 0.1);
+        }
+
+        body.theme-midnight {
+            --bg-body: #000000;
+            --bg-card: #080808;
+            --bg-input: #111111;
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
+            --border: #1a1a1a;
+            --accent-rgb: 0, 242, 255;
+            --accent: #00f2ff;
+            --accent-glow: rgba(0, 242, 255, 0.1);
+        }
+
+        /* Midnight Specific Overrides */
+        body.theme-midnight .group-card {
+            border-color: #111;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        body.theme-midnight .stat-value,
+        body.theme-midnight h1,
+        body.theme-midnight h2 {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
         * {
@@ -111,7 +185,7 @@
             font-family: 'Outfit', sans-serif;
             font-size: 1.75rem;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-main);
             letter-spacing: -0.03em;
         }
 
@@ -159,6 +233,103 @@
             border-color: #f43f5e !important;
         }
 
+        /* Skin Tool Styles */
+        .skin-section-tool {
+            position: relative;
+        }
+
+        .tool-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tool-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: rotate(15deg);
+        }
+
+        .skin-options-popover {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 10px;
+            min-width: 200px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1);
+            z-index: 50;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .skin-options-popover.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .theme-opt {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .theme-opt:hover {
+            transform: scale(1.1);
+        }
+
+        .theme-opt.active {
+            border-color: #fff;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .opt-titanium {
+            background: #e7eeff;
+            border: 1px solid #475569;
+        }
+
+        .opt-emerald {
+            background: #064e3b;
+            border: 1px solid #10b981;
+        }
+
+        .opt-amethyst {
+            background: #4c1d95;
+            border: 1px solid #a855f7;
+        }
+
+        .opt-gold {
+            background: #451a03;
+            border: 1px solid #fbbf24;
+        }
+
+        .opt-midnight {
+            background: #000;
+            border: 1px solid #333;
+        }
+
         /* Stats Ribbon */
         .stats-grid {
             display: grid;
@@ -195,7 +366,7 @@
             font-family: 'Outfit', sans-serif;
             font-size: 1.4rem;
             font-weight: 700;
-            color: #fff;
+            color: var(--text-main);
         }
 
         .stat-sublabel {
@@ -225,7 +396,7 @@
             font-size: 1.2rem;
             font-weight: 700;
             font-family: 'Outfit', sans-serif;
-            color: #fff;
+            color: var(--text-main);
         }
 
         .grid-display {
@@ -247,9 +418,9 @@
         }
 
         .group-card:hover {
-            border-color: rgba(56, 189, 248, 0.4);
-            background: #141d2e;
+            border-color: var(--accent);
             transform: scale(1.005);
+            background: rgba(var(--accent-rgb), 0.05);
         }
 
         .card-main {
@@ -262,7 +433,7 @@
         .group-name {
             font-size: 0.95rem;
             font-weight: 600;
-            color: #e2e8f0;
+            color: var(--text-main);
             font-family: 'Outfit', sans-serif;
             min-width: 160px;
         }
@@ -453,9 +624,22 @@
         .graduation-section {
             margin-bottom: 2rem;
             padding: 1.25rem 1.5rem;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(15, 23, 42, 0) 100%);
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            background: var(--bg-card);
+            border: 2px solid var(--accent);
             border-radius: 20px;
+            box-shadow: 0 10px 30px -5px rgba(var(--accent-rgb), 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .graduation-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--premium));
         }
 
         .graduation-grid {
@@ -465,13 +649,19 @@
         }
 
         .graduation-card {
-            background: rgba(15, 23, 42, 0.4) !important;
-            border: 1px solid rgba(16, 185, 129, 0.1) !important;
-            border-radius: 12px !important;
-            padding: 1rem !important;
+            background: var(--bg-body) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 12px;
+            padding: 1rem;
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .graduation-card:hover {
+            border-color: var(--accent) !important;
+            transform: translateY(-2px);
         }
 
         .graduation-badge {
@@ -491,7 +681,7 @@
         /* Custom Input */
         input[type="month"] {
             background: var(--bg-card);
-            color: #fff;
+            color: var(--text-main);
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 0.45rem 0.75rem;
@@ -579,7 +769,7 @@
             border: 1px solid var(--border);
             border-radius: 6px;
             padding: 0.4rem;
-            color: #fff;
+            color: var(--text-main);
             width: 100%;
             font-size: 0.8rem;
         }
@@ -858,6 +1048,20 @@
                     </svg>
                     Importar JSON
                 </button>
+                <div class="skin-section-tool">
+                    <button class="tool-btn skin-tool" id="skin-toggle" title="Personalizar Apariencia">
+                        <span>🖌️</span>
+                    </button>
+
+                    <div class="skin-options-popover" id="skin-popover">
+                        <div class="theme-opt active opt-titanium" data-theme="default" title="Titanium Silver"></div>
+                        <div class="theme-opt opt-emerald" data-theme="theme-emerald" title="Emerald Luxe"></div>
+                        <div class="theme-opt opt-amethyst" data-theme="theme-amethyst" title="Deep Amethyst"></div>
+                        <div class="theme-opt opt-gold" data-theme="theme-gold" title="Champagne Gold"></div>
+                        <div class="theme-opt opt-midnight" data-theme="theme-midnight"
+                            title="Void Midnight (High Contrast)"></div>
+                    </div>
+                </div>
                 <button class="btn-import btn-danger" onclick="clearAllHistory()">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2.5">
@@ -879,7 +1083,7 @@
                 <span class="stat-sublabel" id="statsIndCount">0 clases</span>
             </div>
             <div class="stat-item">
-                <span class="stat-label">Clases GRUP</span>
+                <span class="stat-label">Clases GRUPALES</span>
                 <span class="stat-value" id="statsGrpTotal">$0</span>
                 <span class="stat-sublabel" id="statsGrpCount">0 clases</span>
             </div>
@@ -1088,7 +1292,7 @@
                                 </div>
                                 <div class="meta-item">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path></svg>
-                                    Vence: ${formatDateShort(group.fecha_final)}
+                                    Graduación: ${formatDateShort(group.fecha_final)}
                                 </div>
                             </div>
                         </div>
@@ -1551,6 +1755,61 @@
                 isDataLoaded = false;
             }
         }
+
+
+
+        /* --- SKIN / THEME MANAGER --- */
+        const skinToggle = document.getElementById('skin-toggle');
+        const skinPopover = document.getElementById('skin-popover');
+        const themeOpts = document.querySelectorAll('.theme-opt');
+
+        // Toggle Popover
+        skinToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            skinPopover.classList.toggle('active');
+        });
+
+        // Close on click outside
+        document.addEventListener('click', (e) => {
+            if (!skinToggle.contains(e.target) && !skinPopover.contains(e.target)) {
+                skinPopover.classList.remove('active');
+            }
+        });
+
+        // Theme Selection
+        themeOpts.forEach(opt => {
+            opt.addEventListener('click', () => {
+                const theme = opt.dataset.theme;
+                applyTheme(theme);
+                skinPopover.classList.remove('active');
+            });
+        });
+
+        function applyTheme(themeName) {
+            // Remove all theme classes
+            document.body.classList.remove('theme-emerald', 'theme-amethyst', 'theme-gold', 'theme-midnight');
+
+            // Add new theme class if not default
+            if (themeName !== 'default') {
+                document.body.classList.add(themeName);
+            }
+
+            // Update active state in popover
+            themeOpts.forEach(opt => {
+                if (opt.dataset.theme === themeName) {
+                    opt.classList.add('active');
+                } else {
+                    opt.classList.remove('active');
+                }
+            });
+
+            // Save preference
+            localStorage.setItem('logic-ledger-theme', themeName);
+        }
+
+        // Init Theme
+        const savedTheme = localStorage.getItem('logic-ledger-theme') || 'default';
+        applyTheme(savedTheme);
 
         // Initialize
         showCredits();
