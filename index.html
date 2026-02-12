@@ -1437,6 +1437,51 @@
             }
         }
 
+        /* Notifications */
+        .notification-container {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            pointer-events: none;
+        }
+
+        .notification {
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+            pointer-events: auto;
+        }
+
+        .notification.active {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--individual);
+        }
+
+        .notification.error {
+            border-left: 4px solid var(--extra);
+        }
+
+        .notification-icon {
+            font-size: 1.2rem;
+        }
+
         /* Discord Community Section */
         .discord-box {
             margin: 2rem 0;
@@ -1967,7 +2012,7 @@
         <div class="nav-link" data-filter="grupal">Grupales</div>
         <div class="nav-link" data-filter="individual">Individuales</div>
         <div class="nav-link" data-filter="replacement">Remplazos</div>
-        <div class="nav-link" data-filter="extra">Recursos Extra</div>
+        <div class="nav-link" data-filter="extra">Clases Extra</div>
 
         <div class="nav-link bonus" data-filter="bonus">🎁 Bono Retención</div>
 
@@ -2055,6 +2100,9 @@
             <!-- Simplified Logs -->
         </div>
     </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
 
     <!-- Credits Modal -->
     <div class="credits-overlay" id="credits-modal">
@@ -2354,7 +2402,7 @@
 
                 const header = document.createElement('div');
                 header.className = 'day-header';
-                header.textContent = dCode === '?' ? 'Recursos Sueltos / Otros' : dayMap[dCode];
+                header.textContent = dCode === '?' ? 'Clases Extras' : dayMap[dCode];
                 container.appendChild(header);
 
                 dayGroups.sort((a, b) => a.name.localeCompare(b.name)).forEach(g => {
@@ -2362,14 +2410,14 @@
                     card.className = 'group-card';
                     card.innerHTML = `
                         <div class="card-tag tag-${g.type[0]}">${g.type}</div>
-                        <h4 class="card-title">${g.name.startsWith('http') ? 'Recurso Externo / DRIVE' : g.name}</h4>
+                        <h4 class="card-title">${g.name.startsWith('http') ? 'Clase Extra' : g.name}</h4>
                         <div class="card-info">
                             <div class="qs-item">
                                 <span class="info-label">Sesiones</span>
                                 <span class="info-val">${g.items.length}</span>
                             </div>
                             <div class="qs-item" style="text-align: right;">
-                                <span class="info-label">Inversión</span>
+                                <span class="info-label">PAGO</span>
                                 <span class="info-val">${(g.items.reduce((a, b) => a + parseRate(b.rate), 0)).toLocaleString()}</span>
                             </div>
                         </div>
@@ -2488,16 +2536,49 @@
 
             const reader = new FileReader();
             reader.onload = (event) => {
-                parse(event.target.result);
-                // Reset search and filter to show new data correctly
-                document.getElementById('group-search').value = '';
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                document.querySelector('[data-filter="all"]').classList.add('active');
-                currentFilter = 'all';
-                document.getElementById('current-title').textContent = 'Panel de Control - Datos Subidos';
+                try {
+                    parse(event.target.result);
+                    showNotification("Datos cargados exitosamente", "success");
+                    // Reset search and filter to show new data correctly
+                    document.getElementById('group-search').value = '';
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    document.querySelector('[data-filter="all"]').classList.add('active');
+                    currentFilter = 'all';
+                    document.getElementById('current-title').textContent = 'Panel de Control - Datos Subidos';
+                } catch (err) {
+                    console.error("Error al procesar el archivo:", err);
+                    showNotification("No se pudo cargar el archivo. Formato incorrecto.", "error");
+                }
+            };
+            reader.onerror = () => {
+                showNotification("Error de lectura del archivo", "error");
             };
             reader.readAsText(file);
         };
+
+        function showNotification(message, type = 'success') {
+            const container = document.getElementById('notification-container');
+            const toast = document.createElement('div');
+            toast.className = `notification ${type}`;
+
+            const icon = type === 'success' ? '✅' : '❌';
+
+            toast.innerHTML = `
+                <span class="notification-icon">${icon}</span>
+                <span class="notification-message">${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            // Trigger animation
+            setTimeout(() => toast.classList.add('active'), 100);
+
+            // Remove after 4s
+            setTimeout(() => {
+                toast.classList.remove('active');
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        }
 
         document.querySelectorAll('.theme-opt').forEach(opt => {
             opt.onclick = () => applyTheme(opt.dataset.theme);
