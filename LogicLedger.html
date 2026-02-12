@@ -173,96 +173,113 @@
             animation: scaleIn 0.3s ease-out forwards;
         }
 
-        /* Return Capsule (Novel Navigation) */
+        /* PORTAL CAPSULE (MODERN HUD DESIGN) */
         .return-capsule {
             position: fixed;
             bottom: 30px;
             left: 30px;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 10px;
+            width: 50px;
+            height: 50px;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-radius: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0;
-            color: var(--text-dim);
             text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 9000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
             overflow: hidden;
-            width: 42px;
-            height: 42px;
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Animated Gradient Border via pseudo */
+        .return-capsule::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: conic-gradient(from 0deg, transparent 0deg, #f43f5e 90deg, #a855f7 180deg, #0ea5e9 270deg, transparent 360deg);
+            z-index: -1;
+            border-radius: 50px;
+            animation: border-spin 3s linear infinite;
+            opacity: 0.6;
+        }
+
+        /* Inner background cover to make it look like a border */
+        .return-capsule::after {
+            content: '';
+            position: absolute;
+            inset: 2px;
+            background: var(--bg-body);
+            border-radius: 50px;
+            z-index: -1;
         }
 
         .return-capsule span {
-            opacity: 0;
-            white-space: nowrap;
-            font-size: 0.8rem;
-            font-weight: 600;
-            width: 0;
+            max-width: 0;
             overflow: hidden;
+            white-space: nowrap;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding-left: 0;
+            opacity: 0;
             transition: all 0.4s ease;
+            position: relative;
+            z-index: 2;
         }
 
         .return-capsule:hover {
-            width: 130px;
-            /* Expand */
-            background: var(--bg-card);
-            border-color: var(--accent);
-            color: var(--text-main);
-            gap: 10px;
-            padding-left: 16px;
-            padding-right: 16px;
-            justify-content: flex-start;
+            width: 150px;
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+            border-color: transparent;
         }
 
         .return-capsule:hover span {
+            max-width: 100px;
+            padding-left: 12px;
+            padding-right: 16px;
             opacity: 1;
-            width: auto;
         }
 
         .return-capsule svg {
-            width: 20px;
-            height: 20px;
-            flex-shrink: 0;
-            transition: transform 0.3s;
-            animation: pulse-gaze 3s infinite ease-in-out, nudge-left 3s infinite ease-in-out;
+            width: 24px;
+            height: 24px;
+            color: var(--text-dim);
+            transition: all 0.4s;
+            position: relative;
+            z-index: 2;
+            animation: icon-float 3s ease-in-out infinite;
         }
 
         .return-capsule:hover svg {
-            color: var(--accent);
+            color: #fff;
+            transform: rotate(90deg) scale(0.9);
             animation: none;
-            /* Stop animation on hover for cleaner interaction */
-            transform: translateX(-3px);
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
         }
 
-        @keyframes pulse-gaze {
-
-            0%,
-            100% {
-                color: var(--text-dim);
-                filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+        @keyframes border-spin {
+            from {
+                transform: rotate(0deg);
             }
 
-            50% {
-                color: var(--text-main);
-                filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+            to {
+                transform: rotate(360deg);
             }
         }
 
-        @keyframes nudge-left {
+        @keyframes icon-float {
 
             0%,
             100% {
-                transform: translateX(0);
+                transform: translateY(0);
             }
 
             50% {
-                transform: translateX(-3px);
+                transform: translateY(-2px);
             }
         }
 
@@ -1115,13 +1132,15 @@
 
 
 <div class="container">
-    <a href="index.html" class="return-capsule" title="Volver al Inicio">
+    <a href="index.html" class="return-capsule" title="Ir al Hub de Apps">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
         </svg>
-        <span>Hub Principal</span>
+        <span>Hub de Apps</span>
     </a>
     <header>
         <a href="index.html" class="brand" style="text-decoration: none; display: block; cursor: pointer;">
@@ -1129,7 +1148,7 @@
             <p>Gestión de cohortes y estudiantes de programación</p>
         </a>
         <div style="margin-left: auto; margin-right: 1.5rem;">
-            <a href="https://github.com/erazoandres/LogicLedger" target="_blank"
+            <a href="https://github.com/erazoandres/Audit-Studio" target="_blank"
                 style="color: var(--text-dim); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; font-weight: 500; transition: var(--transition);"
                 onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-dim)'">
                 <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
@@ -1691,7 +1710,7 @@
         </p>
 
         <div class="github-cta">
-            <a href="https://github.com/erazoandres/LogicLedger" target="_blank" class="github-btn">
+            <a href="https://github.com/erazoandres/Audit-Studio" target="_blank" class="github-btn">
                 <span>🌟</span> Apoyar en GitHub
             </a>
             <div class="star-note">
@@ -1746,6 +1765,15 @@
                 popover: {
                     title: '🏠 Hub Principal',
                     description: '¿Terminaste aquí? Haz clic en esta cápsula para volver al menú de aplicaciones.',
+                    side: "top",
+                    align: 'start'
+                }
+            },
+            {
+                element: '.return-capsule',
+                popover: {
+                    title: '🌀 Portal al Hub',
+                    description: 'Utiliza este portal de acceso rápido para regresar al menú principal de aplicaciones.',
                     side: "top",
                     align: 'start'
                 }
