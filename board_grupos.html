@@ -767,10 +767,11 @@
             let summary = { indCount: 0, indTotal: 0, grpCount: 0, grpTotal: 0 };
 
             sortedDayNames.forEach(dayName => {
-                // Filter to show only active groups in the main grid
+                // Filter logic: show groups that are either active in this month, or haven't started yet.
+                // We hide groups that finished in previous months.
                 const activeGroupsInDay = grouped[dayName].filter(group => {
-                    const count = countMonthClasses(group.fecha, group.fecha_final, group.originalDia, selectedMonth, selectedYear);
-                    return count > 0;
+                    const data = countMonthClasses(group.fecha, group.fecha_final, group.originalDia, selectedMonth, selectedYear);
+                    return data.status !== 'finished';
                 });
 
                 if (activeGroupsInDay.length === 0) return;
@@ -793,7 +794,8 @@
                     const originalIndex = groups.indexOf(group);
                     const card = document.createElement('div');
                     card.className = 'group-card';
-                    const classCount = countMonthClasses(group.fecha, group.fecha_final, group.originalDia, selectedMonth, selectedYear);
+                    const data = countMonthClasses(group.fecha, group.fecha_final, group.originalDia, selectedMonth, selectedYear);
+                    const classCount = data.count;
 
                     const isInd = group.nombre.toUpperCase().includes('IND');
                     const rate = isInd ? 21500 : 32250;
@@ -805,6 +807,31 @@
                     } else {
                         summary.grpCount += classCount;
                         summary.grpTotal += payment;
+                    }
+
+                    let rightSection = '';
+                    if (data.status === 'not-started') {
+                        rightSection = `
+                            <div style="background: rgba(255,152,0,0.1); color: #ff9800; padding: 6px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; border: 1px solid rgba(255,152,0,0.2); display: flex; align-items: center; gap: 6px;">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                Grupo no iniciado
+                            </div>
+                        `;
+                    } else if (data.status === 'finished') {
+                        rightSection = `
+                            <div style="background: rgba(148,163,184,0.1); color: var(--text-dim); padding: 6px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; border: 1px solid var(--border);">
+                                Curso finalizado
+                            </div>
+                        `;
+                    } else {
+                        rightSection = `
+                            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+                                <span class="class-badge" style="${classCount === 0 ? 'opacity: 0.5; filter: grayscale(1)' : ''}">
+                                    ${classCount} clases
+                                </span>
+                                ${classCount > 0 ? `<span class="payment-badge">${formatCurrency(payment)}</span>` : ''}
+                            </div>
+                        `;
                     }
 
                     card.innerHTML = `
@@ -822,12 +849,7 @@
                             </div>
                         </div>
                         <div style="display: flex; align-items: center; gap: 1.2rem;">
-                            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
-                                <span class="class-badge" style="${classCount === 0 ? 'opacity: 0.5; filter: grayscale(1)' : ''}">
-                                    ${classCount} clases
-                                </span>
-                                ${classCount > 0 ? `<span class="payment-badge">${formatCurrency(payment)}</span>` : ''}
-                            </div>
+                            ${rightSection}
                             <button class="delete-btn" onclick="deleteGroup(${originalIndex})" title="Eliminar">
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6V6a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
                             </button>
@@ -855,17 +877,23 @@
         }
 
         function countMonthClasses(startStr, endStr, dayName, m, y) {
-            if (!endStr) return 0;
+            if (!endStr) return { count: 0, status: 'active' };
 
-            // Calculate start date as exactly 10 months before the end date
+            // Calculate start date: End Date minus 40 weeks (280 days)
             const end = new Date(endStr + 'T00:00:00');
             const start = new Date(endStr + 'T00:00:00');
-            start.setMonth(start.getMonth() - 10);
+            start.setDate(start.getDate() - (40 * 7));
+
+            // View window (selected month)
+            const viewMonthStart = new Date(y, m, 1);
+            const viewMonthEnd = new Date(y, m + 1, 0);
+
+            // Determine status
+            if (viewMonthEnd < start) return { count: 0, status: 'not-started' };
+            if (viewMonthStart > end) return { count: 0, status: 'finished' };
 
             let count = 0;
-            // Correctly get the last day of the specific month and year selected
-            const daysInMonth = new Date(y, m + 1, 0).getDate();
-
+            const daysInMonth = viewMonthEnd.getDate();
             const dayMap = { 'LUNES': 1, 'MARTES': 2, 'MIERCOLES': 3, 'MIÉRCOLES': 3, 'JUEVES': 4, 'VIERNES': 5, 'SABADO': 6, 'SÁBADO': 6, 'DOMINGO': 0 };
             const targetDay = dayMap[dayName.toUpperCase()];
 
@@ -877,7 +905,7 @@
                     }
                 }
             }
-            return count;
+            return { count, status: 'active' };
         }
 
         jsonInput.addEventListener('change', (e) => {
