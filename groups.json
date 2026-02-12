@@ -2,126 +2,151 @@
   {
     "dia": "LUNES",
     "hora": "02:00 PM",
-    "nombre": "COL8959"
+    "nombre": "COL8959",
+    "fecha final": "2026-06-29"
   },
   {
     "dia": "LUNES",
     "hora": "03:00 PM",
-    "nombre": "COL383_IND"
+    "nombre": "COL383_IND",
+    "fecha final": "2026-06-29"
   },
   {
     "dia": "LUNES",
     "hora": "04:00 PM",
-    "nombre": "COL11121"
+    "nombre": "COL11121",
+    "fecha final": "2026-11-30"
   },
   {
     "dia": "LUNES",
     "hora": "05:00 PM",
-    "nombre": "COL9001"
+    "nombre": "COL9001",
+    "fecha final": "2026-06-29"
   },
   {
     "dia": "LUNES",
     "hora": "07:00 PM",
-    "nombre": "COL10916"
+    "nombre": "COL10916",
+    "fecha final": "2026-11-09"
   },
   {
     "dia": "MARTES",
     "hora": "04:00 PM",
-    "nombre": "PRM_COL10958"
+    "nombre": "PRM_COL10958",
+    "fecha final": "2026-11-17"
   },
   {
     "dia": "MARTES",
     "hora": "05:30 PM",
-    "nombre": "PRM_COL7779"
+    "nombre": "PRM_COL7779",
+    "fecha final": "2026-04-14"
   },
   {
     "dia": "MARTES",
     "hora": "06:00 PM",
-    "nombre": "PRM_COL7628"
+    "nombre": "PRM_COL7628",
+    "fecha final": "2026-04-07"
   },
   {
     "dia": "MIERCOLES",
     "hora": "02:00 PM",
-    "nombre": "COL10131"
+    "nombre": "COL10131",
+    "fecha final": "2026-09-30"
   },
   {
     "dia": "MIERCOLES",
     "hora": "03:00 PM",
-    "nombre": "COL6846"
+    "nombre": "COL6846",
+    "fecha final": "2026-02-04"
   },
   {
     "dia": "MIERCOLES",
     "hora": "05:00 PM",
-    "nombre": "COL10608"
+    "nombre": "COL10608",
+    "fecha final": "2026-11-04"
   },
   {
     "dia": "MIERCOLES",
     "hora": "06:30 PM",
-    "nombre": "COL7945"
+    "nombre": "COL7945",
+    "fecha final": "2026-05-06"
   },
   {
     "dia": "MIERCOLES",
     "hora": "08:00 PM",
-    "nombre": "COL7235"
+    "nombre": "COL7235",
+    "fecha final": "2026-03-11"
   },
   {
     "dia": "JUEVES",
     "hora": "04:00 PM",
-    "nombre": "PRM_COL7845"
+    "nombre": "PRM_COL7845",
+    "fecha final": "2026-04-30"
   },
   {
     "dia": "JUEVES",
     "hora": "06:00 PM",
-    "nombre": "PRM_COL8699"
+    "nombre": "PRM_COL8699",
+    "fecha final": "2026-06-04"
   },
   {
     "dia": "JUEVES",
     "hora": "07:30 PM",
-    "nombre": "PRM_COL7898"
+    "nombre": "PRM_COL7898",
+    "fecha final": "2026-05-07"
   },
   {
     "dia": "VIERNES",
     "hora": "11:00 AM",
-    "nombre": "COL503_IND"
+    "nombre": "COL503_IND",
+    "fecha final": "2026-10-30"
   },
   {
     "dia": "VIERNES",
     "hora": "02:00 PM",
-    "nombre": "COL10311"
+    "nombre": "COL10311",
+    "fecha final": "2026-11-13"
   },
   {
     "dia": "VIERNES",
     "hora": "05:00 PM",
-    "nombre": "PRM_COL8984"
+    "nombre": "PRM_COL8984",
+    "fecha final": "2026-07-10"
   },
   {
     "dia": "VIERNES",
     "hora": "07:00 PM",
-    "nombre": "COL509_IND"
+    "nombre": "COL509_IND",
+    "fecha final": "2026-10-30"
   },
   {
     "dia": "VIERNES",
     "hora": "08:00 PM",
-    "nombre": "COL362_IND"
+    "nombre": "COL362_IND",
+    "fecha final": "2026-06-12"
   },
   {
     "dia": "SABADO",
     "hora": "10:00 AM",
-    "nombre": "COL10336"
+    "nombre": "COL10336",
+    "fecha final": "2026-10-10"
   },
   {
     "dia": "SABADO",
     "hora": "11:00 AM",
-    "nombre": "COL10025"
+    "nombre": "COL10025",
+    "fecha final": "2026-09-12"
   },
   {
     "dia": "SABADO",
     "hora": "03:00 PM",
-    "nombre": "COL238_IND"
+    "nombre": "COL238_IND",
+    "fecha final": "2026-05-16"
   },
   {
     "dia": "DOMINGO",
     "hora": "09:00 AM",
-    "nombre": "COL11181"
+    "nombre": "COL11181",
+    "fecha final": "2026-11-22"
   }
 ]
