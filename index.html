@@ -288,6 +288,17 @@
             border-radius: 20px;
             color: white;
             font-weight: 700;
+            text-decoration: none;
+            transition: var(--transition-ios);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dev-badge:hover {
+            background: var(--accent-primary);
+            color: black;
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+            transform: translateY(-2px);
+            border-color: transparent;
         }
 
         /* Mobile Adjustments */
@@ -387,7 +398,7 @@
             <div class="spec-item"><b>LATENCY</b> 2.4 MS</div>
             <div class="spec-item"><b>CORE</b> v2.0.4</div>
         </div>
-        <div class="dev-badge">BY ANDRÉS ERAZO</div>
+        <a href="https://erazoandres.github.io/briefcase/" target="_blank" class="dev-badge">BY ANDRÉS ERAZO</a>
     </footer>
 
     <script>
