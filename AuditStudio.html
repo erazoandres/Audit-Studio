@@ -2164,7 +2164,7 @@
             <button class="upload-btn" onclick="document.getElementById('csv-upload').click()">
                 <span>📤</span> Subir Datos
             </button>
-            <input type="file" id="csv-upload" accept=".csv">
+            <input type="file" id="csv-upload" accept=".csv,.xlsx,.xls">
         </div>
 
         <p class="nav-section-label">Categorías</p>
@@ -2300,6 +2300,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/driver.js@1.0.1/dist/driver.js.iife.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
     <script>
         console.log("Audit Studio Logic Loading...");
         // Tutorial / Driver.js Logic
@@ -2447,6 +2448,18 @@
                 btn.classList.add('tutorial-mode');
             } else {
                 btn.classList.remove('tutorial-mode');
+            }
+        }
+
+        function parseWorkbookFromArrayBuffer(ab) {
+            try {
+                const workbook = XLSX.read(ab, { type: 'array' });
+                const firstSheetName = workbook.SheetNames[0];
+                const csv = XLSX.utils.sheet_to_csv(workbook.Sheets[firstSheetName]);
+                parse(csv);
+            } catch (err) {
+                console.error('Error parsing workbook:', err);
+                showNotification('No se pudo procesar el archivo Excel.', 'error');
             }
         }
 
@@ -2711,26 +2724,41 @@
             const file = e.target.files[0];
             if (!file) return;
 
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                try {
-                    parse(event.target.result);
-                    showNotification("Datos cargados exitosamente", "success");
-                    // Reset search and filter to show new data correctly
+            const name = (file.name || '').toLowerCase();
+            if (name.endsWith('.csv')) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        parse(event.target.result);
+                        showNotification("Datos cargados exitosamente", "success");
+                        document.getElementById('group-search').value = '';
+                        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                        document.querySelector('[data-filter="all"]').classList.add('active');
+                        currentFilter = 'all';
+                        document.getElementById('current-title').textContent = 'Panel de Control - Datos Subidos';
+                    } catch (err) {
+                        console.error("Error al procesar el archivo:", err);
+                        showNotification("No se pudo cargar el archivo. Formato incorrecto.", "error");
+                    }
+                };
+                reader.onerror = () => showNotification("Error de lectura del archivo", "error");
+                reader.readAsText(file);
+            } else if (name.endsWith('.xlsx') || name.endsWith('.xls')) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    parseWorkbookFromArrayBuffer(event.target.result);
+                    showNotification("Datos cargados desde Excel", "success");
                     document.getElementById('group-search').value = '';
                     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
                     document.querySelector('[data-filter="all"]').classList.add('active');
                     currentFilter = 'all';
                     document.getElementById('current-title').textContent = 'Panel de Control - Datos Subidos';
-                } catch (err) {
-                    console.error("Error al procesar el archivo:", err);
-                    showNotification("No se pudo cargar el archivo. Formato incorrecto.", "error");
-                }
-            };
-            reader.onerror = () => {
-                showNotification("Error de lectura del archivo", "error");
-            };
-            reader.readAsText(file);
+                };
+                reader.onerror = () => showNotification("Error de lectura del archivo Excel", "error");
+                reader.readAsArrayBuffer(file);
+            } else {
+                showNotification('Formato de archivo no soportado. Usa .csv o .xlsx', 'error');
+            }
         };
 
         function showNotification(message, type = 'success') {
@@ -2882,11 +2910,19 @@
                 console.log("Waiting 2s after notification...");
                 await new Promise(resolve => setTimeout(resolve, 2000));
 
-                console.log("Fetching datos_prueba.csv...");
-                const res = await fetch('datos_prueba.csv');
-                if (!res.ok) throw new Error("No datos_prueba.csv found");
-                const text = await res.text();
-                parse(text);
+                console.log("Fetching datos_prueba.xlsx...");
+                try {
+                    const res = await fetch('datos_prueba.xlsx');
+                    if (!res.ok) throw new Error("No datos_prueba.xlsx found");
+                    const ab = await res.arrayBuffer();
+                    parseWorkbookFromArrayBuffer(ab);
+                } catch (err) {
+                    console.warn('No se pudo cargar datos_prueba.xlsx, intentando CSV...');
+                    const res = await fetch('datos_prueba.csv');
+                    if (!res.ok) throw new Error("No datos_prueba.csv found");
+                    const text = await res.text();
+                    parse(text);
+                }
                 console.log("Auto-load successful.");
             } catch (err) {
                 console.error("Auto-load failed:", err);
