@@ -2164,7 +2164,7 @@
             <button class="upload-btn" onclick="document.getElementById('csv-upload').click()">
                 <span>📤</span> Subir Datos
             </button>
-            <input type="file" id="csv-upload" accept=".csv,.xlsx,.xls">
+            <input type="file" id="csv-upload" accept=".xlsx,.xlsx,.xls">
         </div>
 
         <p class="nav-section-label">Categorías</p>
@@ -2325,7 +2325,7 @@
                     element: '.upload-section',
                     popover: {
                         title: '📤 Subir Datos',
-                        description: 'Haz clic aquí para cargar tu archivo CSV con los datos de las sesiones.',
+                        description: 'Haz clic aquí para cargar tu archivo .xlsx con los datos de las sesiones, recuerda que lo descargas de la pagina PayRoll",
                         side: "bottom",
                         align: 'start'
                     }
@@ -2437,7 +2437,7 @@
         async function init() {
             initTheme();
             checkUploadPrompt();
-            // Eliminada la carga automática de data.csv para iniciar vacío
+            // Eliminada la carga automática de data.xlsx para iniciar vacío
             registry = [];
             renderGrid();
         }
@@ -2725,7 +2725,7 @@
             if (!file) return;
 
             const name = (file.name || '').toLowerCase();
-            if (name.endsWith('.csv')) {
+            if (name.endsWith('.xlsx')) {
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     try {
@@ -2757,7 +2757,7 @@
                 reader.onerror = () => showNotification("Error de lectura del archivo Excel", "error");
                 reader.readAsArrayBuffer(file);
             } else {
-                showNotification('Formato de archivo no soportado. Usa .csv o .xlsx', 'error');
+                showNotification('Formato de archivo no soportado. Usa .xlsx o .xlsx', 'error');
             }
         };
 
@@ -2918,8 +2918,8 @@
                     parseWorkbookFromArrayBuffer(ab);
                 } catch (err) {
                     console.warn('No se pudo cargar datos_prueba.xlsx, intentando CSV...');
-                    const res = await fetch('datos_prueba.csv');
-                    if (!res.ok) throw new Error("No datos_prueba.csv found");
+                    const res = await fetch('datos_prueba.xlsx');
+                    if (!res.ok) throw new Error("No datos_prueba.xlsx found");
                     const text = await res.text();
                     parse(text);
                 }
