@@ -2577,8 +2577,9 @@
             [...dayOrder, '?'].forEach(d => groupedByDay[d] = []);
 
             displayGroups.forEach(g => {
-                const code = g.name.slice(-5).toUpperCase();
-                const dayCode = code.substring(0, 2);
+                // Extraer código de día flexible: busca LU|MA|MI|JU|VI|SA|DO dentro del nombre
+                const match = (g.name || '').toUpperCase().match(/(LU|MA|MI|JU|VI|SA|DO)/);
+                const dayCode = match ? match[1] : '?';
                 if (dayMap[dayCode]) {
                     groupedByDay[dayCode].push(g);
                 } else {
@@ -2590,31 +2591,93 @@
                 const dayGroups = groupedByDay[dCode];
                 if (dayGroups.length === 0) return;
 
-                const header = document.createElement('div');
-                header.className = 'day-header';
-                header.textContent = dCode === '?' ? 'Clases Extras' : dayMap[dCode];
-                container.appendChild(header);
+                if (dCode === '?') {
+                    // Separar grupos individuales sin día asignado de los demás
+                    const individuals = dayGroups.filter(g => g.type === 'individual');
+                    const others = dayGroups.filter(g => g.type !== 'individual');
 
-                dayGroups.sort((a, b) => a.name.localeCompare(b.name)).forEach(g => {
-                    const card = document.createElement('div');
-                    card.className = 'group-card';
-                    card.innerHTML = `
-                        <div class="card-tag tag-${g.type[0]}">${g.type}</div>
-                        <h4 class="card-title">${g.name.startsWith('http') ? 'Clase Extra' : g.name}</h4>
-                        <div class="card-info">
-                            <div class="qs-item">
-                                <span class="info-label">Sesiones</span>
-                                <span class="info-val">${g.items.length}</span>
+                    if (individuals.length > 0) {
+                        const headerI = document.createElement('div');
+                        headerI.className = 'day-header';
+                        headerI.textContent = 'Clases Individuales';
+                        container.appendChild(headerI);
+
+                        individuals.sort((a, b) => a.name.localeCompare(b.name)).forEach(g => {
+                            const card = document.createElement('div');
+                            card.className = 'group-card';
+                            card.innerHTML = `
+                                <div class="card-tag tag-${g.type[0]}">${g.type}</div>
+                                <h4 class="card-title">${g.name.startsWith('http') ? 'Clase Extra' : g.name}</h4>
+                                <div class="card-info">
+                                    <div class="qs-item">
+                                        <span class="info-label">Sesiones</span>
+                                        <span class="info-val">${g.items.length}</span>
+                                    </div>
+                                    <div class="qs-item" style="text-align: right;">
+                                        <span class="info-label">PAGO</span>
+                                        <span class="info-val">${(g.items.reduce((a, b) => a + parseRate(b.rate), 0)).toLocaleString()}</span>
+                                    </div>
+                                </div>
+                            `;
+                            card.onclick = () => openDrawer(g);
+                            container.appendChild(card);
+                        });
+                    }
+
+                    if (others.length > 0) {
+                        const headerO = document.createElement('div');
+                        headerO.className = 'day-header';
+                        headerO.textContent = 'Clases Extras';
+                        container.appendChild(headerO);
+
+                        others.sort((a, b) => a.name.localeCompare(b.name)).forEach(g => {
+                            const card = document.createElement('div');
+                            card.className = 'group-card';
+                            card.innerHTML = `
+                                <div class="card-tag tag-${g.type[0]}">${g.type}</div>
+                                <h4 class="card-title">${g.name.startsWith('http') ? 'Clase Extra' : g.name}</h4>
+                                <div class="card-info">
+                                    <div class="qs-item">
+                                        <span class="info-label">Sesiones</span>
+                                        <span class="info-val">${g.items.length}</span>
+                                    </div>
+                                    <div class="qs-item" style="text-align: right;">
+                                        <span class="info-label">PAGO</span>
+                                        <span class="info-val">${(g.items.reduce((a, b) => a + parseRate(b.rate), 0)).toLocaleString()}</span>
+                                    </div>
+                                </div>
+                            `;
+                            card.onclick = () => openDrawer(g);
+                            container.appendChild(card);
+                        });
+                    }
+                } else {
+                    const header = document.createElement('div');
+                    header.className = 'day-header';
+                    header.textContent = dayMap[dCode];
+                    container.appendChild(header);
+
+                    dayGroups.sort((a, b) => a.name.localeCompare(b.name)).forEach(g => {
+                        const card = document.createElement('div');
+                        card.className = 'group-card';
+                        card.innerHTML = `
+                            <div class="card-tag tag-${g.type[0]}">${g.type}</div>
+                            <h4 class="card-title">${g.name.startsWith('http') ? 'Clase Extra' : g.name}</h4>
+                            <div class="card-info">
+                                <div class="qs-item">
+                                    <span class="info-label">Sesiones</span>
+                                    <span class="info-val">${g.items.length}</span>
+                                </div>
+                                <div class="qs-item" style="text-align: right;">
+                                    <span class="info-label">PAGO</span>
+                                    <span class="info-val">${(g.items.reduce((a, b) => a + parseRate(b.rate), 0)).toLocaleString()}</span>
+                                </div>
                             </div>
-                            <div class="qs-item" style="text-align: right;">
-                                <span class="info-label">PAGO</span>
-                                <span class="info-val">${(g.items.reduce((a, b) => a + parseRate(b.rate), 0)).toLocaleString()}</span>
-                            </div>
-                        </div>
-                    `;
-                    card.onclick = () => openDrawer(g);
-                    container.appendChild(card);
-                });
+                        `;
+                        card.onclick = () => openDrawer(g);
+                        container.appendChild(card);
+                    });
+                }
             });
         }
 
